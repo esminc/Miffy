@@ -1,1 +1,1 @@
-web: java -jar target/miffy-for-idobata-11.0.7.jar
+web: java -jar build/libs/java -jar miffy-0.0.1-SNAPSHOT.jar --server.port=$PORT
