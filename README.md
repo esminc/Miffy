@@ -1,4 +1,5 @@
 # Miffy
+2Dmiffyが給湯室当番のidobata通知をしてくれるアプリ
 ## 開発環境
 - MacOS 10.15.5 Catalina
 - IDA
