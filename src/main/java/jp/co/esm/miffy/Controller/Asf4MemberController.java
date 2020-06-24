@@ -12,8 +12,10 @@ import java.util.List;
 
 @Controller
 public class Asf4MemberController {
+
   @Autowired
   Asf4MemberRepository asf4MemberRepository;
+
   @RequestMapping(value = "asf4members", method = RequestMethod.GET)
   public String index(Model model) {
     List<Asf4Member> asf4MemberList=asf4MemberRepository.findAll();

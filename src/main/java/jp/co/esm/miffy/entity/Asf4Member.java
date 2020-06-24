@@ -10,11 +10,13 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "members")
 public class Asf4Member {
+
   @Id
   @Column(name = "number")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer number;
   private String name;
+
   @Column(name = "idobata_id")
   private String idobataId;
 
