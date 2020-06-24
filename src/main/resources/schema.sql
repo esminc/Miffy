@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS members (
+  number SERIAL NOT NULL,
+  name VARCHAR(255) NOT NULL,
+  idobata_id VARCHAR(20),
+  floor VARCHAR(20) DEFAULT 4,
+  skip BOOLEAN DEFAULT FALSE,
+  PRIMARY KEY (number)
+);
