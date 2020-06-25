@@ -12,20 +12,20 @@ import javax.persistence.Table;
 public class Asf4Member {
 
   @Id
-  @Column(name = "number")
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer number;
+  private Integer id;
   private String name;
 
   @Column(name = "idobata_id")
   private String idobataId;
 
-  public Integer getNumber() {
-    return number;
+  public Integer getId() {
+    return id;
   }
 
-  public void setNumber(Integer number) {
-    this.number = number;
+  public void setId(Integer id) {
+    this.id = id;
   }
 
   public String getName() {
