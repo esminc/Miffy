@@ -11,9 +11,12 @@ import java.util.List;
 
 @Controller
 public class Asf4MemberController {
+  private final Asf4MemberService asf4MemberService;
 
   @Autowired
-  Asf4MemberService asf4MemberService;
+  public Asf4MemberController(Asf4MemberService asf4MemberService) {
+    this.asf4MemberService = asf4MemberService;
+  }
 
   @GetMapping("asf4members")
   public String index(Model model) {
