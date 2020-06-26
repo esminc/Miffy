@@ -9,9 +9,12 @@ import java.util.List;
 
 @Service
 public class Asf4MemberService {
+  public final Asf4MemberRepository asf4MemberRepository;
 
   @Autowired
-  private Asf4MemberRepository asf4MemberRepository;
+  public Asf4MemberService(Asf4MemberRepository asf4MemberRepository) {
+    this.asf4MemberRepository = asf4MemberRepository;
+  }
 
   public List<Asf4Member> selectAll() {
     List<Asf4Member> asf4MemberList = asf4MemberRepository.findAll();
