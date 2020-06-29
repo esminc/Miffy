@@ -2,9 +2,7 @@ package jp.co.esm.miffy.Controller;
 
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.service.Asf4MemberService;
-import jp.co.esm.miffy.service.TestResponseResource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

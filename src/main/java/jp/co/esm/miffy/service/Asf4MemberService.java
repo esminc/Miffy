@@ -21,7 +21,6 @@ import java.util.List;
 public class Asf4MemberService {
     public final Asf4MemberRepository asf4MemberRepository;
     private RestTemplate restTemplate;
-    private TestRequestResource request;
 
     @Autowired
     public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
@@ -41,7 +40,7 @@ public class Asf4MemberService {
             String requestJson = "{\"source\":\"hello\"}";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
+            HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
             String answer = restTemplate.postForObject(URL, entity, String.class);
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
