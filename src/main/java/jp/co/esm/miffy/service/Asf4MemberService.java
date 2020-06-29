@@ -22,6 +22,10 @@ import java.util.Optional;
 public class Asf4MemberService {
     public final Asf4MemberRepository asf4MemberRepository;
     private RestTemplate restTemplate;
+    /**
+     * 現在の掃除当番の人を特定するID
+     */
+    private int cleanerTodayId = 1;
 
     @Autowired
     public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
@@ -36,9 +40,27 @@ public class Asf4MemberService {
         return asf4MemberList;
     }
 
-    public Asf4Member selectData() {
-        int cleanerTodayId = 2;
+    /**
+     * 掃除当番IDを回すメソッドです
+     */
+    public void plusCleanId() {
+        if (cleanerTodayId == 3) {
+            cleanerTodayId = 1;
+        } else {
+            cleanerTodayId++;
+        }
+    }
+
+    /**
+     * 掃除当番の人を特定するメソッドです。
+     *
+     * @param asf4Member
+     * @return 掃除当番の人を返します。
+     */
+    public Asf4Member selectData(List<Asf4Member> asf4Member) {
+        System.out.println(asf4Member.size());
         Optional<Asf4Member> cleaner = asf4MemberRepository.findById(cleanerTodayId);
+        plusCleanId();
         return cleaner.get();
     }
 
@@ -49,7 +71,7 @@ public class Asf4MemberService {
             request.append(idobataid);
             request.append(" 今日の掃除当番です\"}");
             String requestJson = request.toString();
-           // String requestJson = "{\"source\":\"idobataid\"}";
+            // String requestJson = "{\"source\":\"idobataid\"}";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
