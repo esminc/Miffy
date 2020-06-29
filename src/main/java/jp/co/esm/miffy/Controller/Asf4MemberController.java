@@ -14,12 +14,11 @@ import java.util.List;
 public class Asf4MemberController {
     private final Asf4MemberService asf4MemberService;
 
-
     @GetMapping("asf4members")
     public String index(Model model) {
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
-        asf4MemberService.getTestResponse();
+        asf4MemberService.getTestResponse(asf4MemberService.selectData().getIdobataId());
         return "asf4members";
     }
 }

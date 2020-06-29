@@ -15,6 +15,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +36,20 @@ public class Asf4MemberService {
         return asf4MemberList;
     }
 
-    public void getTestResponse() {
+    public Asf4Member selectData() {
+        int cleanerTodayId = 2;
+        Optional<Asf4Member> cleaner = asf4MemberRepository.findById(cleanerTodayId);
+        return cleaner.get();
+    }
+
+    public void getTestResponse(String idobataid) {
         try {
-            String requestJson = "{\"source\":\"hello\"}";
+            StringBuilder request = new StringBuilder();
+            request.append("{\"source\":\"@");
+            request.append(idobataid);
+            request.append(" 今日の掃除当番です\"}");
+            String requestJson = request.toString();
+           // String requestJson = "{\"source\":\"idobataid\"}";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
