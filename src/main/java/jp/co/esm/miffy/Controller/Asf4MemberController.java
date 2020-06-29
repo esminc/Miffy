@@ -14,19 +14,14 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class Asf4MemberController {
-  private final Asf4MemberService asf4MemberService;
+    private final Asf4MemberService asf4MemberService;
 
-  //デバッグ用メソッド
-  public void hello() {
-    System.out.println("Hello Spring Boot!!");
-  }
 
-  @GetMapping("asf4members")
-  public String index(Model model) {
-    List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
-    model.addAttribute("asf4MemberList", asf4MemberList);
-    System.out.println(asf4MemberService.getTestResponse());
-    hello();
-    return "asf4members";
-  }
+    @GetMapping("asf4members")
+    public String index(Model model) {
+        List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
+        model.addAttribute("asf4MemberList", asf4MemberList);
+        asf4MemberService.getTestResponse();
+        return "asf4members";
+    }
 }
