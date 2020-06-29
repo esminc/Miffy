@@ -5,6 +5,9 @@ import jp.co.esm.miffy.repository.Asf4MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -18,6 +21,7 @@ import java.util.List;
 public class Asf4MemberService {
     public final Asf4MemberRepository asf4MemberRepository;
     private RestTemplate restTemplate;
+    private TestRequestResource request;
 
     @Autowired
     public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
@@ -32,17 +36,17 @@ public class Asf4MemberService {
         return asf4MemberList;
     }
 
-    public TestResponseResource getTestResponse() {
-        TestRequestResource request = new TestRequestResource();
-        //request.setMessage("test message");
+    public void getTestResponse() {
         try {
-            return restTemplate.postForObject(URL, "Hello!", TestResponseResource.class);
+            String requestJson = "{\"source\":\"hello\"}";
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<String>(requestJson,headers);
+            String answer = restTemplate.postForObject(URL, entity, String.class);
         } catch (HttpClientErrorException e) {
-            System.out.println("クライアントエラーが発生した");
             e.printStackTrace();
             throw e;
         } catch (HttpServerErrorException e) {
-            System.out.println("サーバエラーが発生した");
             e.printStackTrace();
             throw e;
         }
