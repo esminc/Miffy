@@ -43,8 +43,8 @@ public class Asf4MemberService {
     /**
      * 掃除当番IDを回すメソッドです
      */
-    public void plusCleanId() {
-        if (cleanerTodayId == 3) {
+    public void plusCleanId(List<Asf4Member> asf4MemberList) {
+        if (cleanerTodayId == asf4MemberList.size()) {
             cleanerTodayId = 1;
         } else {
             cleanerTodayId++;
@@ -60,7 +60,7 @@ public class Asf4MemberService {
     public Asf4Member selectData(List<Asf4Member> asf4Member) {
         System.out.println(asf4Member.size());
         Optional<Asf4Member> cleaner = asf4MemberRepository.findById(cleanerTodayId);
-        plusCleanId();
+        plusCleanId(asf4Member);
         return cleaner.get();
     }
 
