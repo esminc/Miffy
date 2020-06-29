@@ -8,4 +8,5 @@ import lombok.Setter;
 public class TestResponseResource {
     private String id;
     private String message;
+
 }
