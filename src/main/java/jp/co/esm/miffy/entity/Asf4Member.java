@@ -18,10 +18,13 @@ public class Asf4Member {
   @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
+
+  @Column(name = "name")
   private String name;
 
   @Column(name = "idobata_id")
   private String idobataId;
+
   @Column(name = "skip")
   private boolean skip;
 }
