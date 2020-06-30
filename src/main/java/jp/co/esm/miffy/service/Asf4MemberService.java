@@ -64,7 +64,7 @@ public class Asf4MemberService {
         return cleaner.get();
     }
 
-    public void getTestResponse(String idobataid) {
+    public void postToHook(String idobataid) {
         try {
             StringBuilder request = new StringBuilder();
             request.append("{\"source\":\"@");

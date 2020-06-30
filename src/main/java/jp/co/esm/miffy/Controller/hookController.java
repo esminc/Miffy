@@ -21,7 +21,7 @@ public class hookController {
     public void hook() throws AJDException {
         Holiday holiday = Holiday.getHoliday(now(ZoneId.systemDefault()));
         if(holiday == null) {
-            asf4MemberService.getTestResponse(asf4MemberService.getCleaner().getIdobataId());
+            asf4MemberService.postToHook(asf4MemberService.getCleaner().getIdobataId());
         }
     }
 }

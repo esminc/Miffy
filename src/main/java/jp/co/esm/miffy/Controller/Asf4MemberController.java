@@ -18,7 +18,6 @@ public class Asf4MemberController {
     public String index(Model model) {
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
-        asf4MemberService.getTestResponse(asf4MemberService.getCleaner().getIdobataId());
         return "asf4members";
     }
 }
