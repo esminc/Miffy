@@ -34,16 +34,21 @@ public class Asf4MemberService {
 
     public static final String URL = "https://idobata.io/hook/custom/40767f01-0b3d-4065-8770-d9e25a206c24";
 
+    /**
+     * テーブルのデータ一覧を返すメソッドです。
+     *
+     * @return List型でメンバ一覧を返します。
+     */
     public List<Asf4Member> selectAll() {
         List<Asf4Member> asf4MemberList = asf4MemberRepository.findAll();
         return asf4MemberList;
     }
 
     /**
-     * 掃除当番IDを回すメソッドです
+     * 掃除当番IDを回すメソッドです。
      */
     public void nextCleanerId() {
-        if (cleanerTodayId == (int)asf4MemberRepository.count()) {
+        if (cleanerTodayId == (int) asf4MemberRepository.count()) {
             cleanerTodayId = 1;
         } else {
             cleanerTodayId++;
@@ -60,10 +65,15 @@ public class Asf4MemberService {
         do {
             cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerTodayId);
             nextCleanerId();
-        } while(cleaner.isEmpty());
+        } while (cleaner.isEmpty());
         return cleaner.get();
     }
 
+    /**
+     * hookのURLにPOSTリクエストをするメソッドです。
+     *
+     * @param idobataid int型のidobataID
+     */
     public void postToHook(String idobataid) {
         try {
             StringBuilder request = new StringBuilder();
@@ -71,7 +81,6 @@ public class Asf4MemberService {
             request.append(idobataid);
             request.append(" 今日の掃除当番です\"}");
             String requestJson = request.toString();
-            // String requestJson = "{\"source\":\"idobataid\"}";
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
