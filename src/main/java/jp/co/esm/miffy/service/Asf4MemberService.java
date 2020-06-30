@@ -59,7 +59,7 @@ public class Asf4MemberService {
      */
     public Asf4Member selectData(List<Asf4Member> asf4Member) {
         System.out.println(asf4Member.size());
-        Optional<Asf4Member> cleaner = asf4MemberRepository.findById(cleanerTodayId);
+        Optional<Asf4Member> cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerTodayId);
         plusCleanId(asf4Member);
         return cleaner.get();
     }
