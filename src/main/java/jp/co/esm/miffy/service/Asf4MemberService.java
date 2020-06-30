@@ -43,8 +43,8 @@ public class Asf4MemberService {
     /**
      * 掃除当番IDを回すメソッドです
      */
-    public void plusCleanId(List<Asf4Member> asf4MemberList) {
-        if (cleanerTodayId == asf4MemberList.size()) {
+    public void nextCleanerId() {
+        if (cleanerTodayId == (int)asf4MemberRepository.count()) {
             cleanerTodayId = 1;
         } else {
             cleanerTodayId++;
@@ -54,13 +54,14 @@ public class Asf4MemberService {
     /**
      * 掃除当番の人を特定するメソッドです。
      *
-     * @param asf4Member
      * @return 掃除当番の人を返します。
      */
-    public Asf4Member selectData(List<Asf4Member> asf4Member) {
-        System.out.println(asf4Member.size());
-        Optional<Asf4Member> cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerTodayId);
-        plusCleanId(asf4Member);
+    public Asf4Member getCleaner() {
+        Optional<Asf4Member> cleaner;
+        do {
+            cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerTodayId);
+            nextCleanerId();
+        } while(cleaner.isEmpty());
         return cleaner.get();
     }
 

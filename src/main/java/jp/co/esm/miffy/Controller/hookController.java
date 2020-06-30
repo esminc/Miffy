@@ -16,7 +16,6 @@ public class hookController {
 
     @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
     public void hook() {
-        List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
-        asf4MemberService.getTestResponse(asf4MemberService.selectData(asf4MemberList).getIdobataId());
+        asf4MemberService.getTestResponse(asf4MemberService.getCleaner().getIdobataId());
     }
 }
