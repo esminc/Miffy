@@ -10,6 +10,8 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -24,6 +26,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 @Service
+@EnableScheduling
 @RequiredArgsConstructor
 public class Asf4MemberService {
     public final Asf4MemberRepository asf4MemberRepository;
@@ -55,7 +58,7 @@ public class Asf4MemberService {
      * 祝日かどうかを判定するメソッドです。
      *
      * @param date 祝日判定対象日。
-     * @return 祝日ならばTRUE。祝日でなければFALSE。
+     * @return 祝日ならばTRUE、祝日でなければFALSEを返します。
      */
     public boolean isHoliday(AJD date){
         Holiday holiday = Holiday.getHoliday(date);
@@ -94,7 +97,7 @@ public class Asf4MemberService {
     /**
      * hookのURLにPOSTリクエストをするメソッドです。
      *
-     * @param idobataid int型のidobataID
+     * @param idobataid String型のidobataID。
      */
     public void postToHook(String idobataid){
         if (idobataid != null) {
@@ -114,5 +117,13 @@ public class Asf4MemberService {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 祝日、休日を除いた月〜金曜日に、idobataのhookを使用して、今日の掃除当番にお知らせをするメソッドです。
+     */
+    @Scheduled(cron = "0 35 14 * * 1-5", zone = "Asia/Tokyo")
+    public void hook() {
+        postToHook(getCleaner().getIdobataId());
     }
 }
