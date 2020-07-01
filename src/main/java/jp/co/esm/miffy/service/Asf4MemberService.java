@@ -1,5 +1,8 @@
 package jp.co.esm.miffy.service;
 
+import ajd4jp.AJD;
+import ajd4jp.AJDException;
+import ajd4jp.Holiday;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.repository.Asf4MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +16,13 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
+
+import static ajd4jp.iso.AJD310.now;
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +32,7 @@ public class Asf4MemberService {
     /**
      * 現在の掃除当番の人を特定するID
      */
-    private int cleanerTodayId = 1;
+    private int cleanerId = 1;
 
     @Autowired
     public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
@@ -48,10 +56,10 @@ public class Asf4MemberService {
      * 掃除当番IDを回すメソッドです。
      */
     public void nextCleanerId() {
-        if (cleanerTodayId == (int) asf4MemberRepository.count()) {
-            cleanerTodayId = 1;
+        if (cleanerId == (int) asf4MemberRepository.count()) {
+            cleanerId = 1;
         } else {
-            cleanerTodayId++;
+            cleanerId++;
         }
     }
 
@@ -61,11 +69,17 @@ public class Asf4MemberService {
      * @return 掃除当番の人を返します。
      */
     public Asf4Member getCleaner() {
-        Optional<Asf4Member> cleaner;
-        do {
-            cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerTodayId);
-            nextCleanerId();
-        } while (cleaner.isEmpty());
+        Optional<Asf4Member> cleaner = null;
+        try {
+            if (isHoliday(now(ZoneId.systemDefault())) == FALSE) {
+                do {
+                    cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerId);
+                    nextCleanerId();
+                } while (cleaner.isEmpty());
+            }
+        } catch (AJDException e) {
+            e.printStackTrace();
+        }
         return cleaner.get();
     }
 
@@ -74,8 +88,8 @@ public class Asf4MemberService {
      *
      * @param idobataid int型のidobataID
      */
-    public void postToHook(String idobataid) {
-        try {
+    public void postToHook(String idobataid){
+        if (idobataid != null) {
             StringBuilder request = new StringBuilder();
             request.append("{\"source\":\"@");
             request.append(idobataid);
@@ -84,13 +98,21 @@ public class Asf4MemberService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
-            String answer = restTemplate.postForObject(URL, entity, String.class);
-        } catch (HttpClientErrorException e) {
-            e.printStackTrace();
-            throw e;
-        } catch (HttpServerErrorException e) {
-            e.printStackTrace();
-            throw e;
+            try {
+                String answer = restTemplate.postForObject(URL, entity, String.class);
+            } catch (HttpClientErrorException e) {
+                e.printStackTrace();
+            } catch (HttpServerErrorException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    public boolean isHoliday(AJD date) throws AJDException {
+        Holiday holiday = Holiday.getHoliday(date);
+        if (holiday == null) {
+            return FALSE;
+        }
+        return TRUE;
     }
 }
