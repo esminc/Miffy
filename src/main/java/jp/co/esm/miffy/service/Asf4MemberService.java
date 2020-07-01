@@ -1,7 +1,6 @@
 package jp.co.esm.miffy.service;
 
 import ajd4jp.AJD;
-import ajd4jp.AJDException;
 import ajd4jp.Holiday;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.repository.Asf4MemberRepository;
@@ -53,14 +52,27 @@ public class Asf4MemberService {
     }
 
     /**
+     * 祝日かどうかを判定するメソッドです。
+     *
+     * @param date 祝日判定対象日。
+     * @return 祝日ならばTRUE。祝日でなければFALSE。
+     */
+    public boolean isHoliday(AJD date){
+        Holiday holiday = Holiday.getHoliday(date);
+        if (holiday == null) {
+            return FALSE;
+        }
+        return TRUE;
+    }
+
+    /**
      * 掃除当番IDを回すメソッドです。
      */
     public void nextCleanerId() {
         if (cleanerId == (int) asf4MemberRepository.count()) {
             cleanerId = 1;
-        } else {
-            cleanerId++;
         }
+        cleanerId++;
     }
 
     /**
@@ -70,15 +82,11 @@ public class Asf4MemberService {
      */
     public Asf4Member getCleaner() {
         Optional<Asf4Member> cleaner = null;
-        try {
-            if (isHoliday(now(ZoneId.systemDefault())) == FALSE) {
-                do {
-                    cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerId);
-                    nextCleanerId();
-                } while (cleaner.isEmpty());
-            }
-        } catch (AJDException e) {
-            e.printStackTrace();
+        if (isHoliday(now(ZoneId.of("Asia/Tokyo"))) == FALSE) {
+            do {
+                cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerId);
+                nextCleanerId();
+            } while (cleaner.isEmpty());
         }
         return cleaner.get();
     }
@@ -106,13 +114,5 @@ public class Asf4MemberService {
                 e.printStackTrace();
             }
         }
-    }
-
-    public boolean isHoliday(AJD date) throws AJDException {
-        Holiday holiday = Holiday.getHoliday(date);
-        if (holiday == null) {
-            return FALSE;
-        }
-        return TRUE;
     }
 }
