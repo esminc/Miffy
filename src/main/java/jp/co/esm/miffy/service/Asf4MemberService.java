@@ -42,7 +42,7 @@ public class Asf4MemberService {
         this.restTemplate = builder.build();
     }
 
-    public static final String URL = "https://idobata.io/hook/custom/40767f01-0b3d-4065-8770-d9e25a206c24";
+    public static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";
 
     /**
      * テーブルのデータ一覧を返すメソッドです。
