@@ -42,7 +42,8 @@ public class Asf4MemberService {
         this.restTemplate = builder.build();
     }
 
-    public static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";
+    public static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434"; // forPR
+    //public static final String URL = "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01"; // forDebug
 
     /**
      * テーブルのデータ一覧を返すメソッドです。
@@ -74,8 +75,9 @@ public class Asf4MemberService {
     public void nextCleanerId() {
         if (cleanerId == (int) asf4MemberRepository.count()) {
             cleanerId = 1;
+        } else {
+            cleanerId++;
         }
-        cleanerId++;
     }
 
     /**
