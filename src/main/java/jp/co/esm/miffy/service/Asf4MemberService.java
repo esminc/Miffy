@@ -124,7 +124,7 @@ public class Asf4MemberService {
     /**
      * 祝日、休日を除いた月〜金曜日に、idobataのhookを使用して、今日の掃除当番にお知らせをするメソッドです。
      */
-    @Scheduled(cron = "0 35 14 * * 1-5", zone = "Asia/Tokyo")
+    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
     public void hook() {
         postToHook(getCleaner().getIdobataId());
     }
