@@ -5,17 +5,22 @@
     <title>登録画面</title>
 </head>
 <body>
-<p>登録内容を確認し、問題なければ「登録」ボタンを押下してください。</p>
+<p>変更内容を入力し、問題なければ「登録」ボタンを押下してください。</p>
 <form method="post" action="/complete" th:object="${demoForm}">
-
     name :<input type="text" th:value="*{name}" th:field="*{name}"/>
     <br/>
     idobataID:<input type="text" th:value="*{idobata_id}" th:field="*{idobata_id}"/>
     <br/>
+    フロア:<select th:field="*{floor}">
+    <option value="">---</option>
+    <option th:each="item : *{getFloorItems()}"
+            th:value="${item.key}" th:text="${item.value}"/>
+</select>階
+    <br/>
     skip :<input type="checkbox" th:value="skip" th:field="*{skip}"/>
     <br/>
     <input type="submit" value="登録"/>
-    <input type="button" value="戻る" onclick="history.back();"/>
+    <input type="button" value="戻る" onclick="history.back();" />
 </form>
 </body>
 </html>

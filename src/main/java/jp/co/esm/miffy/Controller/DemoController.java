@@ -21,6 +21,8 @@ public class DemoController {
          * 名前の初期値を設定する
          */
         demoForm.setName("");
+        demoForm.setFloor("4");
+        demoForm.setSkip("無し");
         return demoForm;
     }
 
