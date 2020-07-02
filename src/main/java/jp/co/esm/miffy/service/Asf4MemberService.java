@@ -42,11 +42,13 @@ public class Asf4MemberService {
         this.restTemplate = builder.build();
     }
 
-    public static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434"; // forPR
-    //public static final String URL = "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01"; // forDebug
+    /**
+     * hookのURL
+     */
+    public static String URL;
 
     /**
-     * テーブルのデータ一覧を返すメソッドです。
+     * テーブルのデータ一覧を返す。
      *
      * @return List型でメンバ一覧を返します。
      */
@@ -56,7 +58,7 @@ public class Asf4MemberService {
     }
 
     /**
-     * 祝日かどうかを判定するメソッドです。
+     * 祝日かどうかを判定する。
      *
      * @param date 祝日判定対象日。
      * @return 祝日ならばTRUE、祝日でなければFALSEを返します。
@@ -70,7 +72,7 @@ public class Asf4MemberService {
     }
 
     /**
-     * 掃除当番IDを回すメソッドです。
+     * 掃除当番IDを回す。
      */
     public void nextCleanerId() {
         if (cleanerId == (int) asf4MemberRepository.count()) {
@@ -81,7 +83,7 @@ public class Asf4MemberService {
     }
 
     /**
-     * 掃除当番の人を特定するメソッドです。
+     * 掃除当番の人を特定する。
      *
      * @return 掃除当番の人を返します。
      */
@@ -97,7 +99,7 @@ public class Asf4MemberService {
     }
 
     /**
-     * hookのURLにPOSTリクエストをするメソッドです。
+     * hookのURLにPOSTリクエストをする。
      *
      * @param idobataid String型のidobataID。
      */
@@ -121,11 +123,22 @@ public class Asf4MemberService {
         }
     }
 
+
     /**
-     * 祝日、休日を除いた月〜金曜日に、idobataのhookを使用して、今日の掃除当番にお知らせをするメソッドです。
+     * 祝日、休日を除いた月〜金曜日に、idobataのhookを使用して、今日の掃除当番にお知らせをする。
      */
-    @Scheduled(cron = "0 35 14 * * 1-5", zone = "Asia/Tokyo")
+   @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
     public void hook() {
+       URL=  "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用
         postToHook(getCleaner().getIdobataId());
+    }
+
+    /**
+     * 29分ごとにpostToHook()を定期実行する。
+     */
+    @Scheduled(fixedDelay = 60000* 29, initialDelay = 30000)
+    public void scheduled_hook() {
+       URL= "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用
+        postToHook("Routine Test");
     }
 }
