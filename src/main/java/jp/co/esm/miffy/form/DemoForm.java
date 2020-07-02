@@ -1,14 +1,17 @@
 package jp.co.esm.miffy.form;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Getter
-@Setter
+@Data
 public class DemoForm {
+
+    /**
+     * id
+     */
+    private Integer id;
 
     /**
      * 名前
@@ -28,7 +31,7 @@ public class DemoForm {
     /**
      * skipチェック
      */
-    private String skip;
+    private Boolean skip;
 
     /**
      *

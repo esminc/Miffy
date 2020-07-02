@@ -25,6 +25,9 @@ public class Asf4Member {
   @Column(name = "idobata_id")
   private String idobataId;
 
+  @Column(name = "floor")
+  private String floor;
+
   @Column(name = "skip")
   private boolean skip;
 }
