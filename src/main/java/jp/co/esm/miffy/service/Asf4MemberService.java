@@ -61,7 +61,7 @@ public class Asf4MemberService {
      * @param date 祝日判定対象日。
      * @return 祝日ならばTRUE、祝日でなければFALSEを返します。
      */
-    public boolean isHoliday(AJD date){
+    public boolean isHoliday(AJD date) {
         Holiday holiday = Holiday.getHoliday(date);
         if (holiday == null) {
             return FALSE;
@@ -101,7 +101,7 @@ public class Asf4MemberService {
      *
      * @param idobataid String型のidobataID。
      */
-    public void postToHook(String idobataid){
+    public void postToHook(String idobataid) {
         if (idobataid != null) {
             StringBuilder request = new StringBuilder();
             request.append("{\"source\":\"@");
