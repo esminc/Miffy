@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="jp" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>確認画面</title>
+</head>
+<body>
+　　 <p>登録内容を確認し、問題なければ「ok」ボタンを押下してください。検索しなおしたい時は戻るボタンを押してください。</p>
+<form method="post" action="/update" th:object="${demoForm}">
+    <p th:text="'名前： ' + *{name}">ここに名前が表示されます</p>
+    <p th:text="'idobataID： ' + *{idobata_id}">ここにidobataIDが表示されます</p>
+    <p th:text="'skip： ' + *{skip}">ここにskip内容が表示されます</p>
+    <input type="submit" value="OK" />
+    <input type="button" value="戻る" onclick="history.back();" />
+</form>
+</body>
+</html>

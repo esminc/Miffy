@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>検索画面</title>
+</head>
+<body>
+<p>下記必要事項を記載の上、「検索」ボタンを押下してください。</p><br/>
+<form method="post" action="/confirm" th:object="${demoForm}">
+    name ：<input type="text" th:value="*{name}" th:field="*{name}"/>
+    <br/>
+    idobataID：<input type="text" th:value="*{idobata_id}" th:field="*{idobata_id}"/>
+    <br/>
+    <input type="submit" value="検索"/>
+</form>
+</body>
+</html>
