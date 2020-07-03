@@ -13,7 +13,7 @@ import java.util.Optional;
 @Controller
 @RequiredArgsConstructor
 @SessionAttributes(types = Asf4Member.class)
-public class DemoController {
+public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
 
     /**

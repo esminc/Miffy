@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 
-@Controller
+@org.springframework.stereotype.Controller
 @RequiredArgsConstructor
-public class Asf4MemberController {
+public class ShowController {
     private final Asf4MemberService asf4MemberService;
 
     @GetMapping("asf4members")
