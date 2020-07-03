@@ -40,7 +40,7 @@ public class MemberInfoController {
      * @return 検索画面へのパス
      */
     @RequestMapping("/")
-    public String index(Asf4Member asf4Member) {
+    public String search(Asf4Member asf4Member) {
         return "search";
     }
 
@@ -68,7 +68,7 @@ public class MemberInfoController {
      * @return 登録画面へのパス
      */
     @RequestMapping("/update")
-    public String Search() {
+    public String update() {
         return "update";
     }
 
@@ -78,7 +78,7 @@ public class MemberInfoController {
      * @return 完了画面へのパス
      */
     @RequestMapping("/complete")
-    public String send(Asf4Member asf4Member) {
+    public String complete(Asf4Member asf4Member) {
         System.out.println(asf4Member.getName());
         asf4MemberService.update(asf4Member);
         return "complete";
