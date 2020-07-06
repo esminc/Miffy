@@ -82,6 +82,18 @@ public class MemberInfoController {
     }
 
     /**
+     * 削除画面に遷移する
+     *
+     * @param asf4Member Formオブジェクト
+     * @return 検索画面へのパス
+     */
+    @RequestMapping("/delete")
+    public String delete(Asf4Member asf4Member) {
+        asf4MemberService.delete(asf4Member);
+        return "delete";
+    }
+
+    /**
      * 登録画面に遷移する
      *
      * @return 登録画面へのパス
