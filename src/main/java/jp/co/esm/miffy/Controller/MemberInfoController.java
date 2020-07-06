@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -45,6 +46,17 @@ public class MemberInfoController {
     }
 
     /**
+     * 再検索画面に遷移する
+     *
+     * @param asf4Member Formオブジェクト
+     * @return 検索画面へのパス
+     */
+    @RequestMapping("/re-search")
+    public String research(Asf4Member asf4Member) {
+        return "re-search";
+    }
+
+    /**
      * 確認画面に遷移する
      *
      * @param asf4Member Formオブジェクト
@@ -52,14 +64,18 @@ public class MemberInfoController {
      */
     @RequestMapping("/confirm")
     public String confirm(Asf4Member asf4Member) {
-        Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
-        //null checkあとで
-        asf4Member.setId(asf4MemberOptional.get().getId());
-        asf4Member.setName(asf4MemberOptional.get().getName());
-        asf4Member.setIdobataId(asf4MemberOptional.get().getIdobataId());
-        asf4Member.setFloor(asf4MemberOptional.get().getFloor());
-        asf4Member.setSkip(asf4MemberOptional.get().isSkip());
-        return "confirm";
+        try {
+            Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
+            asf4Member.setId(asf4MemberOptional.get().getId());
+            asf4Member.setName(asf4MemberOptional.get().getName());
+            asf4Member.setIdobataId(asf4MemberOptional.get().getIdobataId());
+            asf4Member.setFloor(asf4MemberOptional.get().getFloor());
+            asf4Member.setSkip(asf4MemberOptional.get().isSkip());
+            return "confirm";
+        } catch (NoSuchElementException e) {
+            System.out.println("エラーをcatchしました");
+            return "re-search";
+        }
     }
 
     /**
@@ -80,7 +96,12 @@ public class MemberInfoController {
     @RequestMapping("/complete")
     public String complete(Asf4Member asf4Member) {
         System.out.println(asf4Member.getName());
-        asf4MemberService.update(asf4Member);
-        return "complete";
+        try {
+            asf4MemberService.update(asf4Member);
+            return "complete";
+        } catch (NullPointerException e) {
+            System.out.println("エラーをcatchしました");
+            return "search";
+        }
     }
 }
