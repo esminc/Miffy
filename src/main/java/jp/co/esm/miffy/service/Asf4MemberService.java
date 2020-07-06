@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -34,10 +35,14 @@ public class Asf4MemberService {
 
     public Optional<Asf4Member> selectByidobataId(String idobataId) {
         Optional<Asf4Member> asf4MemberOptional = asf4MemberRepository.findByIdobataId(idobataId);
-        return asf4MemberOptional;
+        if (asf4MemberOptional.isPresent()) {
+            return asf4MemberOptional;
+        } else {
+            throw new NullPointerException("一致するIDがありません");
+        }
     }
 
     public void update(Asf4Member asf4Member) {
         asf4MemberRepository.saveAndFlush(asf4Member);
-        }
+    }
 }

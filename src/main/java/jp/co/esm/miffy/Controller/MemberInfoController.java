@@ -3,11 +3,13 @@ package jp.co.esm.miffy.Controller;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.service.Asf4MemberService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.service.NullServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -52,14 +54,20 @@ public class MemberInfoController {
      */
     @RequestMapping("/confirm")
     public String confirm(Asf4Member asf4Member) {
-        Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
-        //null checkあとで
-        asf4Member.setId(asf4MemberOptional.get().getId());
-        asf4Member.setName(asf4MemberOptional.get().getName());
-        asf4Member.setIdobataId(asf4MemberOptional.get().getIdobataId());
-        asf4Member.setFloor(asf4MemberOptional.get().getFloor());
-        asf4Member.setSkip(asf4MemberOptional.get().isSkip());
-        return "confirm";
+        try {
+            Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
+            //null checkあとで
+            Asf4Member result = asf4MemberOptional.orElse(null);
+            asf4Member.setId(result.getId());
+            asf4Member.setName(result.getName());
+            asf4Member.setIdobataId(result.getIdobataId());
+            asf4Member.setFloor(result.getFloor());
+            asf4Member.setSkip(result.isSkip());
+            return "confirm";
+        } catch (NullPointerException e) {
+            System.out.println("エラーをcatchしました");
+            return "search";
+        }
     }
 
     /**
@@ -80,7 +88,12 @@ public class MemberInfoController {
     @RequestMapping("/complete")
     public String complete(Asf4Member asf4Member) {
         System.out.println(asf4Member.getName());
-        asf4MemberService.update(asf4Member);
-        return "complete";
+        try {
+            asf4MemberService.update(asf4Member);
+            return "complete";
+        } catch (NullPointerException e) {
+            System.out.println("エラーをcatchしました");
+            return "search";
+        }
     }
 }
