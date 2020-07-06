@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>検索画面</title>
+</head>
+<body>
+<font color="red"><p>入力フォームに一致する情報がありませんでした。</p></font><br/>
+<p>再度、下記必要事項を記載の上、「検索」ボタンを押下してください。</p><br/>
+<form method="post" action="/confirm" th:object="${asf4Member}">
+    idobataID：<input type="text" th:value="*{idobataId}" th:field="*{idobataId}"/>
+    <br/>
+    <input type="submit" value="検索"/>
+</form>
+</body>
+</html>

@@ -47,6 +47,17 @@ public class MemberInfoController {
     }
 
     /**
+     * 再検索画面に遷移する
+     *
+     * @param asf4Member Formオブジェクト
+     * @return 検索画面へのパス
+     */
+    @RequestMapping("/research")
+    public String research(Asf4Member asf4Member) {
+        return "research";
+    }
+
+    /**
      * 確認画面に遷移する
      *
      * @param asf4Member Formオブジェクト
@@ -66,7 +77,7 @@ public class MemberInfoController {
             return "confirm";
         } catch (NullPointerException e) {
             System.out.println("エラーをcatchしました");
-            return "search";
+            return "research";
         }
     }
 
