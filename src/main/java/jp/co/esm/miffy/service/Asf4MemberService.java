@@ -127,7 +127,7 @@ public class Asf4MemberService {
     /**
      * 祝日、休日を除いた月〜金曜日に、idobataのhookを使用して、今日の掃除当番にお知らせをする。
      */
-   @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
+   @Scheduled(cron = "0 0 12 * * 1-5", zone = "Asia/Tokyo")
     public void hook() {
        URL=  "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用
         postToHook(getCleaner().getIdobataId());
@@ -136,7 +136,7 @@ public class Asf4MemberService {
     /**
      * 29分ごとにpostToHook()を定期実行する。
      */
-    @Scheduled(fixedDelay = 60000* 29, initialDelay = 30000)
+    @Scheduled(cron = "0 */29 9-18 * * 1-5", zone = "Asia/Tokyo")
     public void scheduled_hook() {
        URL= "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用
         postToHook("Routine Test");
