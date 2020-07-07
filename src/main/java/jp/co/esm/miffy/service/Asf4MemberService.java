@@ -17,6 +17,8 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URL;
+import java.net.URLConnection;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +47,8 @@ public class Asf4MemberService {
     /**
      * hookのURL
      */
-    public static String URL;
+    //public static final String URL= "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//Debug用;
+    public static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用;
 
     /**
      * テーブルのデータ一覧を返す。
@@ -63,7 +66,7 @@ public class Asf4MemberService {
      * @param date 祝日判定対象日。
      * @return 祝日ならばTRUE、祝日でなければFALSEを返します。
      */
-    public boolean isHoliday(AJD date){
+    public boolean isHoliday(AJD date) {
         Holiday holiday = Holiday.getHoliday(date);
         if (holiday == null) {
             return FALSE;
@@ -103,7 +106,7 @@ public class Asf4MemberService {
      *
      * @param idobataid String型のidobataID。
      */
-    public void postToHook(String idobataid){
+    public void postToHook(String idobataid) {
         if (idobataid != null) {
             StringBuilder request = new StringBuilder();
             request.append("{\"source\":\"@");
@@ -123,22 +126,11 @@ public class Asf4MemberService {
         }
     }
 
-
     /**
      * 祝日、休日を除いた月〜金曜日に、idobataのhookを使用して、今日の掃除当番にお知らせをする。
      */
-   @Scheduled(cron = "0 0 12 * * 1-5", zone = "Asia/Tokyo")
+    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
     public void hook() {
-       URL=  "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用
         postToHook(getCleaner().getIdobataId());
-    }
-
-    /**
-     * 29分ごとにpostToHook()を定期実行する。
-     */
-    @Scheduled(cron = "0 */29 9-18 * * 1-5", zone = "Asia/Tokyo")
-    public void scheduled_hook() {
-       URL= "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用
-        postToHook("Routine Test");
     }
 }
