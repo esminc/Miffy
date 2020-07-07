@@ -34,7 +34,7 @@ public class Asf4MemberService {
     /**
      * 現在の掃除当番の人を特定するID
      */
-    private int cleanerId = 1;
+    private int cleanerId = 0;
 
     @Autowired
     public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
@@ -53,8 +53,7 @@ public class Asf4MemberService {
      * @return List型でメンバ一覧を返します。
      */
     public List<Asf4Member> selectAll() {
-        List<Asf4Member> asf4MemberList = asf4MemberRepository.findAll();
-        return asf4MemberList;
+        return asf4MemberRepository.findAll();
     }
 
     /**
