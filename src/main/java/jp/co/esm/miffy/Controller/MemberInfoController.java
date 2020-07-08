@@ -3,13 +3,11 @@ package jp.co.esm.miffy.Controller;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.service.Asf4MemberService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.service.NullServiceException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -82,10 +80,33 @@ public class MemberInfoController {
     }
 
     /**
+     * 削除確認画面に遷移する
+     *
+     * @param asf4Member Formオブジェクト
+     * @return 削除確認画面へのパス
+     */
+    @RequestMapping("/delete-confirm")
+    public String deleteConfirm(Asf4Member asf4Member) {
+        try {
+            Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
+            Asf4Member result = asf4MemberOptional.orElse(null);
+            asf4Member.setId(result.getId());
+            asf4Member.setName(result.getName());
+            asf4Member.setIdobataId(result.getIdobataId());
+            asf4Member.setFloor(result.getFloor());
+            asf4Member.setSkip(result.isSkip());
+            return "delete-confirm";
+        } catch (NullPointerException e) {
+            System.out.println("エラーをcatchしました");
+            return "confirm";
+        }
+    }
+
+    /**
      * 削除画面に遷移する
      *
      * @param asf4Member Formオブジェクト
-     * @return 検索画面へのパス
+     * @return 削除画面へのパス
      */
     @RequestMapping("/delete")
     public String delete(Asf4Member asf4Member) {
