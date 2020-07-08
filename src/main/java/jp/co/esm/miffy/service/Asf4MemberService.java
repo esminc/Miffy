@@ -81,11 +81,11 @@ public class Asf4MemberService {
 
     /**
      * idobataのhookを使用して、今日の掃除当番にお知らせをする。
-     * 月曜から金曜の午後3時に hookのURLへPOSTリクエストをする。
+     * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
      * 土曜、日曜、祝日は通知しない。
      * 4階のメンバーが全員skip==trueの場合は通知する。
      */
-    @Scheduled(cron = "0 0 15 * * 1-5", zone = "Asia/Tokyo")
+    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
     private void hook() {
         if (isHoliday(now(ZoneId.of("Asia/Tokyo")))) {
             return;
