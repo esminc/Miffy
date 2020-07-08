@@ -29,10 +29,6 @@ import static ajd4jp.iso.AJD310.now;
 public class Asf4MemberService {
     public final Asf4MemberRepository asf4MemberRepository;
     private RestTemplate restTemplate;
-    /**
-     * 現在の掃除当番の人を特定するID
-     */
-    private int cleanerId = 0;
 
     @Autowired
     public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
@@ -41,9 +37,15 @@ public class Asf4MemberService {
     }
 
     /**
+     * 現在の掃除当番の人を特定するID
+     */
+    private int cleanerId = 0;
+
+    /**
      * hookのURL
      */
-    public static String URL = "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用;
+    private static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用;
+    //private static final String URL = "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用;
 
     /**
      * テーブルのデータ一覧を返す。
@@ -52,16 +54,6 @@ public class Asf4MemberService {
      */
     public List<Asf4Member> selectAll() {
         return asf4MemberRepository.findAll();
-    }
-
-    /**
-     * 祝日かどうかを判定する。
-     *
-     * @param date 祝日判定対象日。
-     * @return 祝日ならばtrue、祝日でなければfalseを返します。
-     */
-    public boolean isHoliday(AJD date) {
-        return Holiday.getHoliday(date) != null;
     }
 
     /**
@@ -79,16 +71,26 @@ public class Asf4MemberService {
     }
 
     /**
-     * 祝日、休日を除いた月〜金曜日に、今日の掃除当番へお知らせをする。
-     * idobataのhookのURLにPOSTリクエストをする。
+     * 祝日かどうかを判定する。
+     *
+     * @param date 祝日判定対象日。
+     * @return 祝日ならばtrue、祝日でなければfalseを返します。
      */
-    @Scheduled(cron = "0 28 10 * * 1-5", zone = "Asia/Tokyo")
+    public boolean isHoliday(AJD date) {
+        return Holiday.getHoliday(date) != null;
+    }
+
+    /**
+     * idobataのhookを使用して、今日の掃除当番にお知らせをする。
+     * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
+     * 土曜、日曜、祝日は通知しない。
+     * 4階のメンバーが全員skip==trueの場合は@hereへメンションする。
+     */
+    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
     public void hook(){
         String postIdobataId;
         String mainMessage;
         if (isHoliday(now(ZoneId.of("Asia/Tokyo")))) {
-            //postIdobataId = "all";
-            //mainMessage = " 今日は祝日！掃除しなくていいよ(・x・)\"}";
             return;
         }
         Optional<Asf4Member> cleaner = getCleaner();

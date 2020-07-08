@@ -18,7 +18,6 @@ public class Asf4MemberController {
     public String index(Model model) {
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
-        asf4MemberService.hook();    // デバッグ用のhookメソッドの呼び出し
         return "asf4members";
     }
 }
