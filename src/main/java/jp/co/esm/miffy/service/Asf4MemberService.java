@@ -61,9 +61,8 @@ public class Asf4MemberService {
      *
      * @return 掃除当番をOptionalオブジェクトで返します。
      */
-    public Optional<Asf4Member> getCleaner() {
-        Optional<Asf4Member> cleaner =
-                asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
+    private Optional<Asf4Member> getCleaner() {
+        Optional<Asf4Member> cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
         if (cleaner.isEmpty()) {
             cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseOrderByIdAsc("4");
         }
@@ -76,7 +75,7 @@ public class Asf4MemberService {
      * @param date 祝日判定対象日。
      * @return 祝日ならばtrue、祝日でなければfalseを返します。
      */
-    public boolean isHoliday(AJD date) {
+    private boolean isHoliday(AJD date) {
         return Holiday.getHoliday(date) != null;
     }
 
@@ -87,7 +86,7 @@ public class Asf4MemberService {
      * 4階のメンバーが全員skip==trueの場合は@hereへメンションする。
      */
     @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
-    public void hook(){
+    private void hook(){
         String postIdobataId;
         String mainMessage;
         if (isHoliday(now(ZoneId.of("Asia/Tokyo")))) {
