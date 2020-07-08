@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static ajd4jp.iso.AJD310.now;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 
 @Service
 @EnableScheduling
@@ -45,7 +43,7 @@ public class Asf4MemberService {
     /**
      * hookのURL
      */
-    public static String URL;
+    public static String URL = "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用;
 
     /**
      * テーブルのデータ一覧を返す。
@@ -60,84 +58,62 @@ public class Asf4MemberService {
      * 祝日かどうかを判定する。
      *
      * @param date 祝日判定対象日。
-     * @return 祝日ならばTRUE、祝日でなければFALSEを返します。
+     * @return 祝日ならばtrue、祝日でなければfalseを返します。
      */
-    public boolean isHoliday(AJD date){
-        Holiday holiday = Holiday.getHoliday(date);
-        if (holiday == null) {
-            return FALSE;
-        }
-        return TRUE;
+    public boolean isHoliday(AJD date) {
+        return Holiday.getHoliday(date) != null;
     }
 
     /**
-     * 掃除当番IDを回す。
+     * 今日の掃除当番の人を特定するメソッドです。
+     *
+     * @return 掃除当番をOptionalオブジェクトで返します。
      */
-    public void nextCleanerId() {
-        if (cleanerId == (int) asf4MemberRepository.count()) {
-            cleanerId = 1;
+    public Optional<Asf4Member> getCleaner() {
+        Optional<Asf4Member> cleaner =
+                asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
+        if (cleaner.isEmpty()) {
+            cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseOrderByIdAsc("4");
+        }
+        return cleaner;
+    }
+
+    /**
+     * 祝日、休日を除いた月〜金曜日に、今日の掃除当番へお知らせをする。
+     * idobataのhookのURLにPOSTリクエストをする。
+     */
+    @Scheduled(cron = "0 28 10 * * 1-5", zone = "Asia/Tokyo")
+    public void hook(){
+        String postIdobataId;
+        String mainMessage;
+        if (isHoliday(now(ZoneId.of("Asia/Tokyo")))) {
+            //postIdobataId = "all";
+            //mainMessage = " 今日は祝日！掃除しなくていいよ(・x・)\"}";
+            return;
+        }
+        Optional<Asf4Member> cleaner = getCleaner();
+        if (cleaner.isPresent()) {
+            postIdobataId = cleaner.get().getIdobataId();
+            mainMessage = " 今日の掃除当番です\"}";
+            cleanerId = cleaner.get().getId();
         } else {
-            cleanerId++;
+            postIdobataId = "here";
+            mainMessage = " 今日はだれも掃除できません(・x・)だれか来る？\"}";
         }
-    }
-
-    /**
-     * 掃除当番の人を特定する。
-     *
-     * @return 掃除当番の人を返します。
-     */
-    public Asf4Member getCleaner() {
-        Optional<Asf4Member> cleaner = null;
-        if (isHoliday(now(ZoneId.of("Asia/Tokyo"))) == FALSE) {
-            do {
-                cleaner = asf4MemberRepository.findByIdAndSkipFalse(cleanerId);
-                nextCleanerId();
-            } while (cleaner.isEmpty());
+        StringBuilder request = new StringBuilder();
+        request.append("{\"source\":\"@");
+        request.append(postIdobataId);
+        request.append(mainMessage);
+        String requestJson = request.toString();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
+        try {
+            String answer = restTemplate.postForObject(URL, entity, String.class);
+        } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+        } catch (HttpServerErrorException e) {
+            e.printStackTrace();
         }
-        return cleaner.get();
-    }
-
-    /**
-     * hookのURLにPOSTリクエストをする。
-     *
-     * @param idobataid String型のidobataID。
-     */
-    public void postToHook(String idobataid){
-        if (idobataid != null) {
-            StringBuilder request = new StringBuilder();
-            request.append("{\"source\":\"@");
-            request.append(idobataid);
-            request.append(" 今日の掃除当番です\"}");
-            String requestJson = request.toString();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
-            try {
-                String answer = restTemplate.postForObject(URL, entity, String.class);
-            } catch (HttpClientErrorException e) {
-                e.printStackTrace();
-            } catch (HttpServerErrorException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    /**
-     * 祝日、休日を除いた月〜金曜日に、idobataのhookを使用して、今日の掃除当番にお知らせをする。
-     */
-   @Scheduled(cron = "0 0 12 * * 1-5", zone = "Asia/Tokyo")
-    public void hook() {
-       URL=  "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用
-        postToHook(getCleaner().getIdobataId());
-    }
-
-    /**
-     * 29分ごとにpostToHook()を定期実行する。
-     */
-    @Scheduled(cron = "0 */29 9-18 * * 1-5", zone = "Asia/Tokyo")
-    public void scheduled_hook() {
-       URL= "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用
-        postToHook("Routine Test");
     }
 }
