@@ -26,11 +26,14 @@ class Asf4MemberServiceTest {
                     "('ボリス', 'test2', FALSE)," +
                     "('バーバラ', 'test3', TRUE);"})
     public void selectAllTest() {
+        // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
         expectedMembers.add(new Asf4Member(1,"スナッフィー", "test1", "4", false));
         expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false));
         expectedMembers.add(new Asf4Member(3,"バーバラ", "test3", "4", true));
+        // 実行
         List<Asf4Member> actualMembers = asf4MemberService.selectAll();
+        // 検証
         assertEquals(expectedMembers, actualMembers);
     }
 
@@ -43,8 +46,11 @@ class Asf4MemberServiceTest {
                     "('ボリス', 'test2', FALSE)," +
                     "('バーバラ', 'test3', TRUE);"})
     public void selectByIdobataIdTest() {
+        // 準備
         Asf4Member expectedSelectedMember = new Asf4Member(1,"スナッフィー", "test1", "4", false);
+        // 実行
         Asf4Member actualSelectedMember = asf4MemberService.selectByidobataId("test1");
+        // 検証
         assertEquals(expectedSelectedMember, actualSelectedMember);
     }
 
