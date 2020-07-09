@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
@@ -17,56 +18,43 @@ public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
 
     /**
-     * Formオブジェクトを初期化して返却する
+     * entityオブジェクトを初期化して返却する
      *
      * @return Formオブジェクト
      */
     @ModelAttribute("asf4Member")
     public Asf4Member createAsf4Member() {
         Asf4Member asf4Member = new Asf4Member();
-        /**
-         * フォームの初期値を設定する
-         */
-        asf4Member.setName("");
-        asf4Member.setFloor("3");
-        asf4Member.setSkip(Boolean.FALSE);
+
         return asf4Member;
     }
 
     /**
      * 検索画面に遷移する
+     * entityオブジェクト"asf4Member"のidobataIdに文字列"no"をsetすることで、検索画面でエラーメッセージが表示されないようにしている。
      *
-     * @param asf4Member Formオブジェクト
+     * @param asf4Member entityオブジェクト
      * @return 検索画面へのパス
      */
-    @RequestMapping("/")
+    @RequestMapping("/search")
     public String search(Asf4Member asf4Member) {
+        asf4Member.setName("no");
         return "search";
     }
 
     /**
-     * 再検索画面に遷移する
+     * 確認画面か検索画面に遷移する
+     * 検索をして、テーブルに一致する項目がある場合は、確認画面に遷移する。
+     * 検索をして、テーブルに一致する項目がない場合は、entityオブジェクト"asf4Member"のidobataIdに文字列"Yes"をsetすることで、
+     * エラーメッセージ付きの検索画面に遷移する
      *
-     * @param asf4Member Formオブジェクト
-     * @return 検索画面へのパス
-     */
-    @RequestMapping("/research")
-    public String research(Asf4Member asf4Member) {
-        return "research";
-    }
-
-    /**
-     * 確認画面に遷移する
-     *
-     * @param asf4Member Formオブジェクト
-     * @return 確認画面へのパス
+     * @param asf4Member entityオブジェクト
+     * @return 確認画面か検索画面へのパス
      */
     @RequestMapping("/confirm")
     public String confirm(Asf4Member asf4Member) {
         try {
-            Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
-            //null checkあとで
-            Asf4Member result = asf4MemberOptional.orElse(null);
+            Asf4Member result= asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
             asf4Member.setId(result.getId());
             asf4Member.setName(result.getName());
             asf4Member.setIdobataId(result.getIdobataId());
@@ -75,7 +63,8 @@ public class MemberInfoController {
             return "confirm";
         } catch (NullPointerException e) {
             System.out.println("エラーをcatchしました");
-            return "research";
+            asf4Member.setName("Yes");
+            return "search";
         }
     }
 
@@ -88,8 +77,7 @@ public class MemberInfoController {
     @RequestMapping("/delete-confirm")
     public String deleteConfirm(Asf4Member asf4Member) {
         try {
-            Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
-            Asf4Member result = asf4MemberOptional.orElse(null);
+            Asf4Member result = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
             asf4Member.setId(result.getId());
             asf4Member.setName(result.getName());
             asf4Member.setIdobataId(result.getIdobataId());
@@ -131,13 +119,7 @@ public class MemberInfoController {
      */
     @RequestMapping("/complete")
     public String complete(Asf4Member asf4Member) {
-        System.out.println(asf4Member.getName());
-        try {
             asf4MemberService.update(asf4Member);
             return "complete";
-        } catch (NullPointerException e) {
-            System.out.println("エラーをcatchしました");
-            return "search";
-        }
     }
 }
