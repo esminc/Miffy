@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,63 +17,52 @@ public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
 
     /**
-     * Formオブジェクトを初期化して返却する
+     * entityオブジェクトを初期化して返却する
      *
      * @return Formオブジェクト
      */
     @ModelAttribute("asf4Member")
     public Asf4Member createAsf4Member() {
         Asf4Member asf4Member = new Asf4Member();
-        /**
-         * フォームの初期値を設定する
-         */
-        asf4Member.setName("");
-        asf4Member.setFloor("3");
-        asf4Member.setSkip(Boolean.FALSE);
         return asf4Member;
     }
 
     /**
      * 検索画面に遷移する
+     * entityオブジェクト"asf4Member"のidobataIdに文字列"no"をsetすることで、検索画面でエラーメッセージが表示されないようにしている。
      *
-     * @param asf4Member Formオブジェクト
+     * @param asf4Member entityオブジェクト
      * @return 検索画面へのパス
      */
-    @RequestMapping("/")
+    @RequestMapping("/search")
     public String search(Asf4Member asf4Member) {
+        asf4Member.setName("no");
         return "search";
     }
 
     /**
-     * 再検索画面に遷移する
+     * 確認画面か検索画面に遷移する
+     * 検索をして、テーブルに一致する項目がある場合は、確認画面に遷移する。
+     * 検索をして、テーブルに一致する項目がない場合は、entityオブジェクト"asf4Member"のidobataIdに文字列"Yes"をsetすることで、
+     * エラーメッセージ付きの検索画面に遷移する
      *
-     * @param asf4Member Formオブジェクト
-     * @return 検索画面へのパス
-     */
-    @RequestMapping("/re-search")
-    public String research(Asf4Member asf4Member) {
-        return "re-search";
-    }
-
-    /**
-     * 確認画面に遷移する
-     *
-     * @param asf4Member Formオブジェクト
-     * @return 確認画面へのパス
+     * @param asf4Member entityオブジェクト
+     * @return 確認画面か検索画面へのパス
      */
     @RequestMapping("/confirm")
     public String confirm(Asf4Member asf4Member) {
         try {
-            Optional<Asf4Member> asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
-            asf4Member.setId(asf4MemberOptional.get().getId());
-            asf4Member.setName(asf4MemberOptional.get().getName());
-            asf4Member.setIdobataId(asf4MemberOptional.get().getIdobataId());
-            asf4Member.setFloor(asf4MemberOptional.get().getFloor());
-            asf4Member.setSkip(asf4MemberOptional.get().isSkip());
+            Asf4Member asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
+            asf4Member.setId(asf4MemberOptional.getId());
+            asf4Member.setName(asf4MemberOptional.getName());
+            asf4Member.setIdobataId(asf4MemberOptional.getIdobataId());
+            asf4Member.setFloor(asf4MemberOptional.getFloor());
+            asf4Member.setSkip(asf4MemberOptional.isSkip());
             return "confirm";
         } catch (NoSuchElementException e) {
+            asf4Member.setName("Yes");
             System.out.println("エラーをcatchしました");
-            return "re-search";
+            return "search";
         }
     }
 
@@ -95,13 +83,7 @@ public class MemberInfoController {
      */
     @RequestMapping("/complete")
     public String complete(Asf4Member asf4Member) {
-        System.out.println(asf4Member.getName());
-        try {
             asf4MemberService.update(asf4Member);
             return "complete";
-        } catch (NullPointerException e) {
-            System.out.println("エラーをcatchしました");
-            return "search";
-        }
     }
 }
