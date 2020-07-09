@@ -18,13 +18,13 @@ class Asf4MemberServiceTest {
     private Asf4MemberService asf4MemberService;
 
     @Test
-    @Sql(statements = {"DROP TABLE members;",
+/*    @Sql(statements = {"DROP TABLE members;",
             "CREATE TABLE if not exists members " +
                     "(id SERIAL NOT NULL PRIMARY KEY, name VARCHAR(255) NOT NULL, idobata_id VARCHAR(20), floor VARCHAR(20) DEFAULT 4, skip BOOLEAN DEFAULT FALSE);",
             "INSERT INTO members (name, idobata_id, skip) VALUES " +
                     "('スナッフィー', 'test1', FALSE), " +
                     "('ボリス', 'test2', FALSE)," +
-                    "('バーバラ', 'test3', TRUE);"})
+                    "('バーバラ', 'test3', TRUE);"})*/
     public void selectAllTest() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
