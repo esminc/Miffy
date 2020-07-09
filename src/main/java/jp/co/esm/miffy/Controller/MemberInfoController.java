@@ -20,12 +20,11 @@ public class MemberInfoController {
     /**
      * entityオブジェクトを初期化して返却する
      *
-     * @return Formオブジェクト
+     * @return entityオブジェクト
      */
     @ModelAttribute("asf4Member")
     public Asf4Member createAsf4Member() {
         Asf4Member asf4Member = new Asf4Member();
-
         return asf4Member;
     }
 
@@ -54,14 +53,14 @@ public class MemberInfoController {
     @RequestMapping("/confirm")
     public String confirm(Asf4Member asf4Member) {
         try {
-            Asf4Member result= asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
+            Asf4Member result = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
             asf4Member.setId(result.getId());
             asf4Member.setName(result.getName());
             asf4Member.setIdobataId(result.getIdobataId());
             asf4Member.setFloor(result.getFloor());
             asf4Member.setSkip(result.isSkip());
             return "confirm";
-        } catch (NullPointerException e) {
+        } catch (NoSuchElementException e) {
             System.out.println("エラーをcatchしました");
             asf4Member.setName("Yes");
             return "search";
@@ -71,29 +70,18 @@ public class MemberInfoController {
     /**
      * 削除確認画面に遷移する
      *
-     * @param asf4Member Formオブジェクト
+     * @param asf4Member entityオブジェクト
      * @return 削除確認画面へのパス
      */
     @RequestMapping("/delete-confirm")
     public String deleteConfirm(Asf4Member asf4Member) {
-        try {
-            Asf4Member result = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
-            asf4Member.setId(result.getId());
-            asf4Member.setName(result.getName());
-            asf4Member.setIdobataId(result.getIdobataId());
-            asf4Member.setFloor(result.getFloor());
-            asf4Member.setSkip(result.isSkip());
-            return "delete-confirm";
-        } catch (NullPointerException e) {
-            System.out.println("エラーをcatchしました");
-            return "confirm";
-        }
+        return "delete-confirm";
     }
 
     /**
      * 削除画面に遷移する
      *
-     * @param asf4Member Formオブジェクト
+     * @param asf4Member entityオブジェクト
      * @return 削除画面へのパス
      */
     @RequestMapping("/delete")
@@ -119,7 +107,7 @@ public class MemberInfoController {
      */
     @RequestMapping("/complete")
     public String complete(Asf4Member asf4Member) {
-            asf4MemberService.update(asf4Member);
-            return "complete";
+        asf4MemberService.update(asf4Member);
+        return "complete";
     }
 }
