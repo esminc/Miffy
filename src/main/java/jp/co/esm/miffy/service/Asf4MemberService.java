@@ -112,7 +112,7 @@ public class Asf4MemberService {
      * idobataのhookを使用して、今日の掃除当番をお知らせする。
      * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
      */
-    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
+    @Scheduled(cron = "0 30 16-17 * * 1-5", zone = "Asia/Tokyo")
     public void postToHook() {
         String requestJson = makeRequest(now(ZoneId.of("Asia/Tokyo")));
         if (requestJson == null) {
