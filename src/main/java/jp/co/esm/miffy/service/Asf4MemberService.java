@@ -50,16 +50,16 @@ public class Asf4MemberService {
     /**
      * テーブルのデータ一覧を返す。
      *
-     * @return List型でメンバ一覧を返します。
+     * @return List型でメンバ一覧を返す。
      */
     public List<Asf4Member> selectAll() {
         return asf4MemberRepository.findAll();
     }
 
     /**
-     * 今日の掃除当番の人を特定するメソッドです。
+     * 今日の掃除当番の人を特定する。
      *
-     * @return 掃除当番をOptionalオブジェクトで返します。
+     * @return 掃除当番をOptionalオブジェクトで返す。
      */
     private Optional<Asf4Member> getCleaner() {
         Optional<Asf4Member> cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
@@ -73,22 +73,21 @@ public class Asf4MemberService {
      * 祝日かどうかを判定する。
      *
      * @param date 祝日判定対象日。
-     * @return 祝日ならばtrue、祝日でなければfalseを返します。
+     * @return 祝日ならばTRUE、祝日でなければFALSEを返す。
      */
-    private boolean isHoliday(AJD date) {
+    public boolean isHoliday(AJD date) {
         return Holiday.getHoliday(date) != null;
     }
 
     /**
-     * idobataのhookを使用して、今日の掃除当番にお知らせをする。
-     * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
-     * 土曜、日曜、祝日は通知しない。
-     * 4階のメンバーが全員skip==trueの場合は通知する。
+     * 曜日・日付に応じたメンション付きの掃除当番通知用リクエスト文を生成する。
+     * 該当するメンバーが誰もいない場合は本文にその旨を記載する。
+     *
+     * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
-    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
-    private void hook() {
-        if (isHoliday(now(ZoneId.of("Asia/Tokyo")))) {
-            return;
+     private String makeRequest(AJD date) {
+        if (isHoliday(date)) {
+            return null;
         }
         String postIdobataId;
         String mainMessage;
@@ -106,12 +105,26 @@ public class Asf4MemberService {
         request.append(postIdobataId);
         request.append(mainMessage);
         String requestJson = request.toString();
+        return requestJson;
+    }
+
+    /**
+     * idobataのhookを使用して、今日の掃除当番をお知らせする。
+     * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
+     */
+    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
+    public void postToHook() {
+        String requestJson = makeRequest(now(ZoneId.of("Asia/Tokyo")));
+        if (requestJson == null) {
+            return;
+        }
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
         try {
             String answer = restTemplate.postForObject(URL, entity, String.class);
-        } catch (HttpClientErrorException e) {
+        } catch (
+            HttpClientErrorException e) {
             e.printStackTrace();
         } catch (HttpServerErrorException e) {
             e.printStackTrace();

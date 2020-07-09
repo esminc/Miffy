@@ -17,7 +17,8 @@ public class Asf4MemberController {
     @GetMapping("asf4members")
     public String index(Model model) {
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
-        model.addAttribute("asf4MemberList", asf4MemberList);
+        model.addAttribute("asf4MemberList", asf4MemberList); // debug用
+        asf4MemberService.postToHook();
         return "asf4members";
     }
 }
