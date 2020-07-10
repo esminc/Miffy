@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface Asf4MemberRepository extends JpaRepository<Asf4Member, Integer> {
 
     /**
-     * 指定のフロアに一致かつ、Skip==FALSEかつ、指定のidより大きいidを持つメンバー情報をid昇順に並べた一番上のメンバー情報を取得する
+     * 指定のフロアに一致かつ、Skip==falseかつ、指定のidより大きいidを持つメンバー情報をid昇順に並べた一番上のメンバー情報を取得する
      *
      * @param floor Stringのフロア情報
      * @param id int型のid
@@ -20,10 +20,17 @@ public interface Asf4MemberRepository extends JpaRepository<Asf4Member, Integer>
     Optional<Asf4Member> findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc(String floor, int id);
 
     /**
-     * 指定のフロアに一致かつ、Skip==FALSEのメンバー情報をid昇順に並べた一番上のメンバー情報を取得する
+     * 指定のフロアに一致かつ、Skip==falseのメンバー情報をid昇順に並べた一番上のメンバー情報を取得する
      *
      * @param floor Stringのフロア情報
      * @return 条件に一致するメンバー情報をOptional型で返す
      */
     Optional<Asf4Member> findTopByFloorAndSkipFalseOrderByIdAsc(String floor);
+
+    /**
+     * IsCleaner==trueのメンバー情報を取得する
+     *
+     * @return 条件に一致するメンバー情報をOptional型で返す
+     */
+    Optional<Asf4Member> findByIsCleanerTrue();
 }
