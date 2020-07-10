@@ -39,4 +39,15 @@ class Asf4MemberServiceTest {
         assertEquals(expectedSelectedMember, actualSelectedMember);
     }
 
+    @Test
+    public void updateTest() {
+        // 準備
+        List<Asf4Member> before = asf4MemberService.selectAll();
+        before.add(new Asf4Member(4,"ポピーさん", "test4", "4", false));
+        // 実行
+        asf4MemberService.update(new Asf4Member(4,"ポピーさん", "test4", "4", false));
+        List<Asf4Member> after = asf4MemberService.selectAll();
+        // 検証
+        assertEquals(before, after);
+    }
 }
