@@ -17,6 +17,11 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +44,7 @@ public class Asf4MemberService {
     /**
      * 現在の掃除当番の人を特定するID
      */
-    private int cleanerId = 0;
+    private int cleanerId = fileRead();
 
     /**
      * hookのURL
@@ -62,6 +67,7 @@ public class Asf4MemberService {
      * @return 掃除当番をOptionalオブジェクトで返す。
      */
     private Optional<Asf4Member> getCleaner() {
+        System.out.println("cleanerIdは"+cleanerId);
         Optional<Asf4Member> cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
         if (cleaner.isEmpty()) {
             cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseOrderByIdAsc("4");
@@ -80,12 +86,53 @@ public class Asf4MemberService {
     }
 
     /**
+     * ファイルへの読み込み
+     */
+    public int fileRead() {
+        try {
+            // FileWriterクラスのオブジェクトを生成する"
+            FileReader file = new FileReader("src/main/java/jp/co/esm/miffy/service/cash.txt");
+            int cleanerId = file.read();
+            if(cleanerId >40) {
+                cleanerId=cleanerId- 48;
+            }
+//            while (cleanerId != -1) {
+//                cleanerId = file.read();
+//            }
+            //ファイルを閉じる
+            file.close();
+            System.out.println("cleanerIdは"+cleanerId);
+            System.out.println("tryに入りました");
+            return cleanerId;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    /**
+     * ファイルへの書き込み
+     */
+    public void fileWrite(String cleanerId) {
+        try {
+            // FileWriterクラスのオブジェクトを生成する"
+            FileWriter file = new FileWriter("src/main/java/jp/co/esm/miffy/service/cash.txt");
+            // PrintWriterクラスのオブジェクトを生成する
+            file.write(cleanerId);
+            //ファイルを閉じる
+            file.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 曜日・日付に応じたメンション付きの掃除当番通知用リクエスト文を生成する。
      * 該当するメンバーが誰もいない場合は本文にその旨を記載する。
      *
      * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
-     private String makeRequest(AJD date) {
+    private String makeRequest(AJD date) {
         if (isHoliday(date)) {
             return null;
         }
@@ -96,6 +143,7 @@ public class Asf4MemberService {
             postIdobataId = cleaner.get().getIdobataId();
             mainMessage = " 今日の掃除当番です\"}";
             cleanerId = cleaner.get().getId();
+            fileWrite(Integer.toString(cleanerId));
         } else {
             postIdobataId = "here";
             mainMessage = " 今日はだれも掃除できません(・x・)だれか来る？\"}";
@@ -124,7 +172,7 @@ public class Asf4MemberService {
         try {
             String answer = restTemplate.postForObject(URL, entity, String.class);
         } catch (
-            HttpClientErrorException e) {
+                HttpClientErrorException e) {
             e.printStackTrace();
         } catch (HttpServerErrorException e) {
             e.printStackTrace();

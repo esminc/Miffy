@@ -7,3 +7,7 @@ CREATE TABLE members (
   floor VARCHAR(20) DEFAULT 4,
   skip BOOLEAN DEFAULT FALSE
 );
+
+CREATE TABLE cash (
+  cleaner_id VARCHAR(20)
+);
