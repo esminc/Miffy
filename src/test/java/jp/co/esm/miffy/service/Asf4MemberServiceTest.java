@@ -50,4 +50,16 @@ class Asf4MemberServiceTest {
         // 検証
         assertEquals(before, after);
     }
+
+    @Test
+    public void deleteTest() {
+        // 準備
+        List<Asf4Member> before = asf4MemberService.selectAll();
+        before.remove(new Asf4Member(3,"バーバラ", "test3","4", true));
+        // 実行
+        asf4MemberService.delete(new Asf4Member(3,"バーバラ", "test3","4", true));
+        List<Asf4Member> after = asf4MemberService.selectAll();
+        // 検証
+        assertEquals(before, after);
+    }
 }
