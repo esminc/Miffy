@@ -15,11 +15,11 @@ import java.util.List;
 public class ShowController {
     private final Asf4MemberService asf4MemberService;
 
-    @RequestMapping("asf4members")
-    public String index(Model model) {
-        List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
-        model.addAttribute("asf4MemberList", asf4MemberList);
-        // asf4MemberService.hook();    // デバッグ用のhookメソッドの呼び出し
-        return "asf4members";
-    }
+//    @RequestMapping("asf4members")
+//    public String index(Model model) {
+//        List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
+//        model.addAttribute("asf4MemberList", asf4MemberList);
+//        // asf4MemberService.hook();    // デバッグ用のhookメソッドの呼び出し
+//        return "asf4members";
+//    }
 }
