@@ -39,8 +39,9 @@ public class MemberInfoController {
     }
 
     @RequestMapping("asf4members")
-    public String index(Model model) {
+    public String index(Model model,Asf4Member asf4Member) {
         formReset = false;
+        asf4Member.setId(null);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
         // asf4MemberService.hook();    // デバッグ用のhookメソッドの呼び出し
@@ -101,6 +102,7 @@ public class MemberInfoController {
             asf4Member.setName("");
             asf4Member.setIdobataId("");
             asf4Member.setFloor("");
+            asf4Member.setSkip(false);
         }
         return "update";
     }
