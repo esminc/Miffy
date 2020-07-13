@@ -25,6 +25,8 @@ dependencies {
 	compile('org.projectlombok:lombok')
 	annotationProcessor('org.projectlombok:lombok')
 	compile files('libs/ajd4jp-1.4.6.2019.jar')
+	testCompile group: 'com.github.springtestdbunit', name: 'spring-test-dbunit', version: '1.3.0'
+	testCompile group: 'org.dbunit', name: 'dbunit', version: '2.6.0'
 }
 
 test {
