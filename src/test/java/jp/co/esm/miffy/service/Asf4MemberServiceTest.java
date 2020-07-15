@@ -4,6 +4,7 @@ import jp.co.esm.miffy.entity.Asf4Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ class Asf4MemberServiceTest {
     private Asf4MemberService asf4MemberService;
 
     @Test
+    @Sql({"/schema.sql", "/data.sql"})
     public void selectAllTest() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
@@ -42,24 +44,26 @@ class Asf4MemberServiceTest {
     @Test
     public void updateTest() {
         // 準備
-        List<Asf4Member> before = asf4MemberService.selectAll();
-        before.add(new Asf4Member(4,"ポピーさん", "test4", "4", false));
+        List<Asf4Member> expectedMembers = asf4MemberService.selectAll();
+        expectedMembers.add(new Asf4Member(4,"ポピーさん", "test4", "4", false));
         // 実行
         asf4MemberService.update(new Asf4Member(4,"ポピーさん", "test4", "4", false));
-        List<Asf4Member> after = asf4MemberService.selectAll();
+        List<Asf4Member> actualMembers = asf4MemberService.selectAll();
         // 検証
-        assertEquals(before, after);
+        assertEquals(expectedMembers, actualMembers);
     }
 
     @Test
+    @Sql({"/schema.sql", "/data.sql"})
     public void deleteTest() {
         // 準備
-        List<Asf4Member> before = asf4MemberService.selectAll();
-        before.remove(new Asf4Member(3,"バーバラ", "test3","4", true));
+        List<Asf4Member> expectedMembers = new ArrayList<Asf4Member>();
+        expectedMembers.add(new Asf4Member(1,"スナッフィー", "test1", "4", false));
+        expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false));
         // 実行
         asf4MemberService.delete(new Asf4Member(3,"バーバラ", "test3","4", true));
-        List<Asf4Member> after = asf4MemberService.selectAll();
+        List<Asf4Member> actualMembers = asf4MemberService.selectAll();
         // 検証
-        assertEquals(before, after);
+        assertEquals(expectedMembers, actualMembers);
     }
 }
