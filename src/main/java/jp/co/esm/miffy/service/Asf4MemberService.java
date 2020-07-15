@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static ajd4jp.iso.AJD310.now;
@@ -42,11 +43,6 @@ public class Asf4MemberService {
     }
 
     /**
-     * 現在の掃除当番の人を特定するID
-     */
-    private int cleanerId = fileRead();
-
-    /**
      * hookのURL
      */
     private static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用;
@@ -62,15 +58,54 @@ public class Asf4MemberService {
     }
 
     /**
+     * 前回の掃除当番の人を特定する。
+     *
+     * @return 前回の掃除当番をAsf4Memberクラスで返す。
+     */
+    private Asf4Member getLastCleaner() {
+        Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
+        if (lastCleanerOptional.isPresent()) {
+            return lastCleanerOptional.get();
+        } else {
+            throw new NoSuchElementException("検索条件:IsCleaner==true に一致する情報がありません。前回掃除した人は誰ですか。");
+        }
+    }
+
+    /**
+     * 前回の掃除当番の人を特定する。
+     *
+     * @return 前回の掃除当番をAsf4Memberクラスで返す。
+     */
+    private Asf4Member getLastCleanerId() {
+        Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
+        if (lastCleanerOptional.isPresent()) {
+            return lastCleanerOptional.get();
+        } else {
+            throw new NoSuchElementException("検索条件:IsCleaner==true に一致する情報がありません。前回掃除した人は誰ですか。");
+        }
+    }
+
+    /**
      * 今日の掃除当番の人を特定する。
      *
      * @return 掃除当番をOptionalオブジェクトで返す。
      */
-    private Optional<Asf4Member> getCleaner() {
-        System.out.println("cleanerIdは"+cleanerId);
-        Optional<Asf4Member> cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
-        if (cleaner.isEmpty()) {
-            cleaner = asf4MemberRepository.findTopByFloorAndSkipFalseOrderByIdAsc("4");
+    private Asf4Member getCleaner() throws NoSuchElementException {
+        Asf4Member lastCleaner = getLastCleanerId();
+        int cleanerId = lastCleaner.getId();
+        Optional<Asf4Member> cleanerOptional = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
+        if (cleanerOptional.isEmpty()) {
+            cleanerOptional = asf4MemberRepository.findTopByFloorAndSkipFalseOrderByIdAsc("4");
+        }
+        Asf4Member cleaner;
+        if (cleanerOptional.isPresent()) {
+            cleaner = cleanerOptional.get();
+            cleaner.setCleaner(true);
+            asf4MemberRepository.saveAndFlush(cleaner);
+            lastCleaner.setCleaner(false);
+            asf4MemberRepository.saveAndFlush(lastCleaner);
+        } else {
+            cleaner = null;
         }
         return cleaner;
     }
@@ -81,7 +116,7 @@ public class Asf4MemberService {
      * @param date 祝日判定対象日。
      * @return 祝日ならばTRUE、祝日でなければFALSEを返す。
      */
-    public boolean isHoliday(AJD date) {
+    private boolean isHoliday(AJD date) {
         return Holiday.getHoliday(date) != null;
     }
 
@@ -136,17 +171,20 @@ public class Asf4MemberService {
         if (isHoliday(date)) {
             return null;
         }
-        String postIdobataId;
-        String mainMessage;
-        Optional<Asf4Member> cleaner = getCleaner();
-        if (cleaner.isPresent()) {
-            postIdobataId = cleaner.get().getIdobataId();
-            mainMessage = " 今日の掃除当番です\"}";
-            cleanerId = cleaner.get().getId();
-            fileWrite(Integer.toString(cleanerId));
-        } else {
-            postIdobataId = "here";
-            mainMessage = " 今日はだれも掃除できません(・x・)だれか来る？\"}";
+        String postIdobataId = null;
+        String mainMessage = null;
+        Asf4Member cleaner;
+        try {
+            cleaner = getCleaner();
+            if (cleaner != null) {
+                postIdobataId = cleaner.getIdobataId();
+                mainMessage = " 今日の掃除当番です\"}";
+            } else {
+                postIdobataId = "here";
+                mainMessage = " 今日は誰もオフィスにいないみたい(・x・)\"}";
+            }
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
         }
         StringBuilder request = new StringBuilder();
         request.append("{\"source\":\"@");
@@ -160,7 +198,7 @@ public class Asf4MemberService {
      * idobataのhookを使用して、今日の掃除当番をお知らせする。
      * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
      */
-    @Scheduled(cron = "0 30 16-17 * * 1-5", zone = "Asia/Tokyo")
+    @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
     public void postToHook() {
         String requestJson = makeRequest(now(ZoneId.of("Asia/Tokyo")));
         if (requestJson == null) {
