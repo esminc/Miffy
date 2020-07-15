@@ -60,6 +60,7 @@ public class MemberInfoController {
     public String search(Asf4Member asf4Member, ErrorCheck errorCheck) {
         errorCheck.setCheck("no");
         asf4Member.setIdobataId("");
+        asf4Member.setDelete_flag("off");
         return "search";
     }
 

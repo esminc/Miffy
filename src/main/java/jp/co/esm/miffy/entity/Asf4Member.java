@@ -37,6 +37,9 @@ public class Asf4Member {
   @Column(name = "skip")
   private boolean skip;
 
+  @Column(name = "delete_flag")
+  private String delete_flag;
+
   /**
    *
    * @return Map<String,String>型のフロアオブジェクトを返す
