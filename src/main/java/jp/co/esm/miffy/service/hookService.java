@@ -27,12 +27,12 @@ import static ajd4jp.iso.AJD310.now;
 @Service
 @EnableScheduling
 @RequiredArgsConstructor
-public class Asf4MemberService {
+public class hookService {
     public final Asf4MemberRepository asf4MemberRepository;
     private RestTemplate restTemplate;
 
     @Autowired
-    public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
+    public hookService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
         this.asf4MemberRepository = asf4MemberRepository;
         this.restTemplate = builder.build();
     }
