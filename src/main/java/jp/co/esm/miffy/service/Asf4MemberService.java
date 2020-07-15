@@ -121,47 +121,6 @@ public class Asf4MemberService {
     }
 
     /**
-     * ファイルへの読み込み
-     */
-    public int fileRead() {
-        try {
-            // FileWriterクラスのオブジェクトを生成する"
-            FileReader file = new FileReader("src/main/java/jp/co/esm/miffy/service/cash.txt");
-            int cleanerId = file.read();
-            if(cleanerId >40) {
-                cleanerId=cleanerId- 48;
-            }
-//            while (cleanerId != -1) {
-//                cleanerId = file.read();
-//            }
-            //ファイルを閉じる
-            file.close();
-            System.out.println("cleanerIdは"+cleanerId);
-            System.out.println("tryに入りました");
-            return cleanerId;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return -1;
-        }
-    }
-
-    /**
-     * ファイルへの書き込み
-     */
-    public void fileWrite(String cleanerId) {
-        try {
-            // FileWriterクラスのオブジェクトを生成する"
-            FileWriter file = new FileWriter("src/main/java/jp/co/esm/miffy/service/cash.txt");
-            // PrintWriterクラスのオブジェクトを生成する
-            file.write(cleanerId);
-            //ファイルを閉じる
-            file.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * 曜日・日付に応じたメンション付きの掃除当番通知用リクエスト文を生成する。
      * 該当するメンバーが誰もいない場合は本文にその旨を記載する。
      *
