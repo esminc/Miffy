@@ -38,8 +38,16 @@ public class MemberInfoController {
         return asf4Member;
     }
 
+    /**
+     * データ一覧画面に遷移する
+     * entityオブジェクト"asf4Member"のIdにnullをsetすることで、新規登録の際に、idを指定せずにupdate()を
+     * 実行するようにしている
+     * @param model
+     * @param asf4Member
+     * @return
+     */
     @RequestMapping("asf4members")
-    public String index(Model model,Asf4Member asf4Member) {
+    public String index(Model model, Asf4Member asf4Member) {
         formReset = false;
         asf4Member.setId(null);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
