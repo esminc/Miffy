@@ -118,11 +118,11 @@ public class MemberInfoController {
     /**
      * 完了画面に遷移する
      *
-     * @return 完了画面へのパス
+     * @return データ一覧画面URLをリダイレクト先として指定したもの
      */
     @RequestMapping("/complete")
     public String complete(Asf4Member asf4Member) {
         asf4MemberService.update(asf4Member);
-        return "complete";
+        return "redirect:/asf4members";
     }
 }
