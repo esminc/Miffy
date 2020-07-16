@@ -9,6 +9,8 @@
 - DB
     - PostgreSQL(12.3)
 ## 画面説明
+https://miffy-for-idobata.herokuapp.com/asfMembers
+でmiffyアプリのトップページにアクセスできる
 - データ一覧画面   
     - GET: `/asf4Members`
     - 登録したメンバ一覧が表示されている。
@@ -22,3 +24,18 @@
 - 登録画面
     - GET: `/update` `/create`
     - 情報を変更する場合や新規登録する際に、必要な情報を入力フォームに入力し、登録ボタンを押下する。戻りたい場合は、戻るボタンを押下する。
+## Herokuへのデプロイの方法(手動デプロイ)
+1. Herokuのアカウント登録
+2. 下記コマンドでThe Heroku Command Line Interface (CLI) をインストール<br>
+   `brew tap heroku/brew && brew install heroku`
+3. Herokuにログイン<br>
+`heroku login`
+4. アプリの作成<br>
+`heroku create アプリ名`
+5. 使用するBuildpackを変更<br>
+`BUILDPACK_URL=https://github.com/marcoVermeulen/heroku-buildpack-gradlew.git`
+6. Herokuアプリとgithubのリポジトリの連携<br>
+参考:https://qiita.com/0yan/items/cd7eb98e114dd812c498
+7. ソースをリモートリポジトリ にpush<br>
+8. Herokuダッシュボードの「Deploy」タブから手動デプロイ<br>
+
