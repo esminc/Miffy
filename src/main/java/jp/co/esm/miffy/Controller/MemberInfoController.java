@@ -20,7 +20,7 @@ import java.util.Optional;
 @Getter
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes(types = Asf4Member.class)
+@SessionAttributes(types = {Asf4Member.class,ErrorCheck.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
     /**
@@ -39,8 +39,16 @@ public class MemberInfoController {
         return asf4Member;
     }
 
+    /**
+     * データ一覧画面に遷移する
+     * entityオブジェクト"asf4Member"のIdにnullをsetすることで、新規登録の際に、idを指定せずにupdate()を
+     * 実行するようにしている
+     * @param model
+     * @param asf4Member
+     * @return
+     */
     @RequestMapping("asf4members")
-    public String index(Model model,Asf4Member asf4Member) {
+    public String index(Model model, Asf4Member asf4Member) {
         formReset = false;
         asf4Member.setId(null);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
@@ -92,17 +100,6 @@ public class MemberInfoController {
     }
 
     /**
-     * 削除確認画面に遷移する
-     *
-     * @param asf4Member entityオブジェクト
-     * @return 削除確認画面へのパス
-     */
-    @RequestMapping("/delete-confirm")
-    public String deleteConfirm(Asf4Member asf4Member) {
-        return "delete-confirm";
-    }
-
-    /**
      * 削除画面に遷移する
      *
      * @param asf4Member entityオブジェクト
@@ -115,31 +112,38 @@ public class MemberInfoController {
     }
 
     /**
+     * 新規登録する際に、entityの情報を初期化する(IDは指定しないようにする)
+     * @param asf4Member
+     * @return 登録画面へのパス
+     */
+    @RequestMapping("/create")
+    public String create(Asf4Member asf4Member) {
+        asf4Member.setId(null);
+        asf4Member.setName("");
+        asf4Member.setIdobataId("");
+        asf4Member.setFloor("");
+        asf4Member.setSkip(false);
+        return "update";
+    }
+
+    /**
      * 登録画面に遷移する
-     * 既存データを変更するときは、入力フォームをリセットしない
-     * 新規登録の時は、入力フォームをリセットする
      *
      * @return 登録画面へのパス
      */
     @RequestMapping("/update")
     public String update(Asf4Member asf4Member) {
-        if (!formReset) {
-            asf4Member.setName("");
-            asf4Member.setIdobataId("");
-            asf4Member.setFloor("");
-            asf4Member.setSkip(false);
-        }
         return "update";
     }
 
     /**
      * 完了画面に遷移する
      *
-     * @return 完了画面へのパス
+     * @return データ一覧画面URLをリダイレクト先として指定したもの
      */
     @RequestMapping("/complete")
     public String complete(Asf4Member asf4Member) {
         asf4MemberService.update(asf4Member);
-        return "complete";
+        return "redirect:/asf4members";
     }
 }
