@@ -59,7 +59,7 @@ public class HookService {
      */
     private Asf4Member getLastCleaner() {
         Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
-        return lastCleanerOptional.orElseThrow(() -> new NoSuchElementException("検索条件:IsCleaner==true に一致する情報がありません。"));
+        return lastCleanerOptional.orElseThrow(() -> new NoSuchElementException("IsCleaner == true に一致する情報がありません。"));
     }
 
     /**
@@ -108,23 +108,28 @@ public class HookService {
             return null;
         }
         String postIdobataId = null;
+        String errorMessage = " ";
         String mainMessage = null;
         Asf4Member cleaner;
         try {
             cleaner = getCleaner();
             if (cleaner != null) {
                 postIdobataId = cleaner.getIdobataId();
-                mainMessage = " 今日の掃除当番です\"}";
+                mainMessage = "今日の掃除当番です\"}";
             } else {
                 postIdobataId = "here";
-                mainMessage = " 今日は誰もオフィスにいないみたい(・x・)\"}";
+                mainMessage = "今日は誰もオフィスにいないみたい(・x・)\"}";
             }
         } catch (NoSuchElementException e) {
             e.printStackTrace();
+            postIdobataId = "all ";
+            errorMessage = e.getMessage();
+            mainMessage = "前回掃除した人は誰？(・x・)\"}";
         }
         StringBuilder request = new StringBuilder();
         request.append("{\"source\":\"@");
         request.append(postIdobataId);
+        request.append(errorMessage);
         request.append(mainMessage);
         String requestJson = request.toString();
         return requestJson;
