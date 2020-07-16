@@ -20,7 +20,7 @@ import java.util.Optional;
 @Getter
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes(types = {Asf4Member.class,ErrorCheck.class})
+@SessionAttributes(types = {Asf4Member.class, ErrorCheck.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
     /**
@@ -43,6 +43,7 @@ public class MemberInfoController {
      * データ一覧画面に遷移する
      * entityオブジェクト"asf4Member"のIdにnullをsetすることで、新規登録の際に、idを指定せずにupdate()を
      * 実行するようにしている
+     *
      * @param model
      * @param asf4Member
      * @return
@@ -108,11 +109,12 @@ public class MemberInfoController {
     @RequestMapping("/delete")
     public String delete(Asf4Member asf4Member) {
         asf4MemberService.delete(asf4Member);
-        return "delete";
+        return "redirect:/asf4members";
     }
 
     /**
      * 新規登録する際に、entityの情報を初期化する(IDは指定しないようにする)
+     *
      * @param asf4Member
      * @return 登録画面へのパス
      */
