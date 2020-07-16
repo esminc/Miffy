@@ -22,15 +22,11 @@ import java.util.NoSuchElementException;
 @SessionAttributes(types = {Asf4Member.class,ErrorCheck.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
-    /**
-     * 入力フォームをリセットするかどうかを判定する変数
-     */
-    private boolean formReset = false;
 
     /**
      * entityオブジェクトを初期化して返却する
      *
-     * @return Formオブジェクト
+     * @return entityオブジェクト
      */
     @ModelAttribute("asf4Member")
     public Asf4Member createAsf4Member() {
@@ -48,7 +44,6 @@ public class MemberInfoController {
      */
     @RequestMapping("asf4members")
     public String index(Model model, Asf4Member asf4Member) {
-        formReset = false;
         asf4Member.setId(null);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
@@ -88,7 +83,6 @@ public class MemberInfoController {
             asf4Member.setIdobataId(asf4MemberOptional.getIdobataId());
             asf4Member.setFloor(asf4MemberOptional.getFloor());
             asf4Member.setSkip(asf4MemberOptional.isSkip());
-            formReset = true;
             return "confirm";
         } catch (NoSuchElementException e) {
             errorCheck.setCheck("Yes");
@@ -121,8 +115,6 @@ public class MemberInfoController {
     public String update(Asf4Member asf4Member) {
         return "update";
     }
-
-
 
     /**
      * 完了画面に遷移する
