@@ -9,7 +9,7 @@
 - DB
     - PostgreSQL(12.3)
 ## 画面説明
-https://miffy-for-idobata.herokuapp.com/asfMembers
+https://miffy-for-idobata.herokuapp.com/asf4members
 でmiffyアプリのトップページにアクセスできる
 - データ一覧画面   
     - GET: `/asf4Members`
