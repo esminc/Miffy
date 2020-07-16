@@ -32,12 +32,12 @@ import static ajd4jp.iso.AJD310.now;
 @Service
 @EnableScheduling
 @RequiredArgsConstructor
-public class Asf4MemberService {
+public class HookService {
     public final Asf4MemberRepository asf4MemberRepository;
     private RestTemplate restTemplate;
 
     @Autowired
-    public Asf4MemberService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
+    public HookService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
         this.asf4MemberRepository = asf4MemberRepository;
         this.restTemplate = builder.build();
     }
@@ -54,7 +54,7 @@ public class Asf4MemberService {
      * @return List型でメンバ一覧を返す。
      */
     public List<Asf4Member> selectAll() {
-        return asf4MemberRepository.findAll();
+        return asf4MemberRepository.findAllByOrderByIdAsc();
     }
 
     /**
@@ -62,27 +62,9 @@ public class Asf4MemberService {
      *
      * @return 前回の掃除当番をAsf4Memberクラスで返す。
      */
-    private Asf4Member getLastCleaner() {
+    Asf4Member getLastCleaner() {
         Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
-        if (lastCleanerOptional.isPresent()) {
-            return lastCleanerOptional.get();
-        } else {
-            throw new NoSuchElementException("検索条件:IsCleaner==true に一致する情報がありません。前回掃除した人は誰ですか。");
-        }
-    }
-
-    /**
-     * 前回の掃除当番の人を特定する。
-     *
-     * @return 前回の掃除当番をAsf4Memberクラスで返す。
-     */
-    private Asf4Member getLastCleanerId() {
-        Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
-        if (lastCleanerOptional.isPresent()) {
-            return lastCleanerOptional.get();
-        } else {
-            throw new NoSuchElementException("検索条件:IsCleaner==true に一致する情報がありません。前回掃除した人は誰ですか。");
-        }
+        return lastCleanerOptional.orElseThrow(() -> new NoSuchElementException("IsCleaner == true に一致する情報がありません。"));
     }
 
     /**
@@ -90,8 +72,8 @@ public class Asf4MemberService {
      *
      * @return 掃除当番をOptionalオブジェクトで返す。
      */
-    private Asf4Member getCleaner() throws NoSuchElementException {
-        Asf4Member lastCleaner = getLastCleanerId();
+    Asf4Member getCleaner() throws NoSuchElementException {
+        Asf4Member lastCleaner = getLastCleaner();
         int cleanerId = lastCleaner.getId();
         Optional<Asf4Member> cleanerOptional = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
         if (cleanerOptional.isEmpty()) {
@@ -110,13 +92,13 @@ public class Asf4MemberService {
         return cleaner;
     }
 
-    /**
+    /**∑
      * 祝日かどうかを判定する。
      *
      * @param date 祝日判定対象日。
      * @return 祝日ならばTRUE、祝日でなければFALSEを返す。
      */
-    private boolean isHoliday(AJD date) {
+    boolean isHoliday(AJD date) {
         return Holiday.getHoliday(date) != null;
     }
 
@@ -126,28 +108,33 @@ public class Asf4MemberService {
      *
      * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
-    private String makeRequest(AJD date) {
+     String makeRequest(AJD date) {
         if (isHoliday(date)) {
             return null;
         }
         String postIdobataId = null;
+        String errorMessage = " ";
         String mainMessage = null;
         Asf4Member cleaner;
         try {
             cleaner = getCleaner();
             if (cleaner != null) {
                 postIdobataId = cleaner.getIdobataId();
-                mainMessage = " 今日の掃除当番です\"}";
+                mainMessage = "今日の掃除当番です\"}";
             } else {
                 postIdobataId = "here";
-                mainMessage = " 今日は誰もオフィスにいないみたい(・x・)\"}";
+                mainMessage = "今日は誰もオフィスにいないみたい(・x・)\"}";
             }
         } catch (NoSuchElementException e) {
             e.printStackTrace();
+            postIdobataId = "all ";
+            errorMessage = e.getMessage();
+            mainMessage = "前回掃除した人は誰？(・x・)\"}";
         }
         StringBuilder request = new StringBuilder();
         request.append("{\"source\":\"@");
         request.append(postIdobataId);
+        request.append(errorMessage);
         request.append(mainMessage);
         String requestJson = request.toString();
         return requestJson;
