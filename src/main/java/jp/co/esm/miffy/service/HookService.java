@@ -49,7 +49,7 @@ public class HookService {
      * @return List型でメンバ一覧を返す。
      */
     public List<Asf4Member> selectAll() {
-        return asf4MemberRepository.findAll();
+        return asf4MemberRepository.findAllByOrderByIdAsc();
     }
 
     /**
@@ -57,7 +57,7 @@ public class HookService {
      *
      * @return 前回の掃除当番をAsf4Memberクラスで返す。
      */
-    private Asf4Member getLastCleaner() {
+    Asf4Member getLastCleaner() {
         Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
         return lastCleanerOptional.orElseThrow(() -> new NoSuchElementException("IsCleaner == true に一致する情報がありません。"));
     }
@@ -87,7 +87,7 @@ public class HookService {
         return cleaner;
     }
 
-    /**
+    /**∑
      * 祝日かどうかを判定する。
      *
      * @param date 祝日判定対象日。
@@ -103,7 +103,7 @@ public class HookService {
      *
      * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
-    private String makeRequest(AJD date) {
+     String makeRequest(AJD date) {
         if (isHoliday(date)) {
             return null;
         }
