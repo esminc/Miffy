@@ -42,7 +42,7 @@ public class Asf4MemberService {
      */
     public Asf4Member selectByidobataId(String idobataId) {
         Optional<Asf4Member> asf4MemberOptional = asf4MemberRepository.findByIdobataId(idobataId);
-        return asf4MemberOptional.orElseThrow(NoSuchElementException::new);
+        return asf4MemberOptional.orElseThrow(() -> new NoSuchElementException("指定のIDに一致する情報がありません。"));
     }
 
     /**
