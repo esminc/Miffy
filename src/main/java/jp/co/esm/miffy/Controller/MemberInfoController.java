@@ -98,22 +98,31 @@ public class MemberInfoController {
     }
 
     /**
+     * 新規登録する際に、entityの情報を初期化する(IDは指定しないようにする)
+     * @param asf4Member
+     * @return 登録画面へのパス
+     */
+    @RequestMapping("/create")
+    public String create(Asf4Member asf4Member) {
+        asf4Member.setId(null);
+        asf4Member.setName("");
+        asf4Member.setIdobataId("");
+        asf4Member.setFloor("");
+        asf4Member.setSkip(false);
+        return "update";
+    }
+
+    /**
      * 登録画面に遷移する
-     * 既存データを変更するときは、入力フォームをリセットしない
-     * 新規登録の時は、入力フォームをリセットする
      *
      * @return 登録画面へのパス
      */
     @RequestMapping("/update")
     public String update(Asf4Member asf4Member) {
-        if (!formReset) {
-            asf4Member.setName("");
-            asf4Member.setIdobataId("");
-            asf4Member.setFloor("");
-            asf4Member.setSkip(false);
-        }
         return "update";
     }
+
+
 
     /**
      * 完了画面に遷移する
