@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import static ajd4jp.iso.AJD310.now;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Transactional
 class HookServiceTest {
 
     @Autowired
