@@ -87,11 +87,11 @@ public class HookService {
         return cleaner;
     }
 
-    /**∑
+    /**
      * 祝日かどうかを判定する。
      *
      * @param date 祝日判定対象日。
-     * @return 祝日ならばTRUE、祝日でなければFALSEを返す。
+     * @return 祝日ならばtrue、祝日でなければfalseを返す。
      */
     boolean isHoliday(AJD date) {
         return Holiday.getHoliday(date) != null;
