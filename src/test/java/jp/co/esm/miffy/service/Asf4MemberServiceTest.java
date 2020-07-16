@@ -4,21 +4,21 @@ import jp.co.esm.miffy.entity.Asf4Member;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.jdbc.Sql;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
+@Transactional
 class Asf4MemberServiceTest {
 
     @Autowired
     private Asf4MemberService asf4MemberService;
 
     @Test
-    @Sql({"/schema.sql","/data.sql"})
     public void selectAllTest() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
