@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 @Getter
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes(types = Asf4Member.class)
+@SessionAttributes(types = {Asf4Member.class,ErrorCheck.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
     /**
