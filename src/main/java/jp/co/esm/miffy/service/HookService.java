@@ -59,11 +59,7 @@ public class HookService {
      */
     private Asf4Member getLastCleaner() {
         Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
-        if (lastCleanerOptional.isPresent()) {
-            return lastCleanerOptional.get();
-        } else {
-            throw new NoSuchElementException("検索条件:IsCleaner==true に一致する情報がありません。前回掃除した人は誰ですか。");
-        }
+        return lastCleanerOptional.orElseThrow(() -> new NoSuchElementException("検索条件:IsCleaner==true に一致する情報がありません。"));
     }
 
     /**
@@ -71,7 +67,7 @@ public class HookService {
      *
      * @return 掃除当番をOptionalオブジェクトで返す。
      */
-    private Asf4Member getCleaner() throws NoSuchElementException {
+    Asf4Member getCleaner() throws NoSuchElementException {
         Asf4Member lastCleaner = getLastCleaner();
         int cleanerId = lastCleaner.getId();
         Optional<Asf4Member> cleanerOptional = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
@@ -97,7 +93,7 @@ public class HookService {
      * @param date 祝日判定対象日。
      * @return 祝日ならばTRUE、祝日でなければFALSEを返す。
      */
-    private boolean isHoliday(AJD date) {
+    boolean isHoliday(AJD date) {
         return Holiday.getHoliday(date) != null;
     }
 
