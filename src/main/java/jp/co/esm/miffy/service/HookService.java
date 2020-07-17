@@ -88,22 +88,26 @@ public class HookService {
             cleaner = getCleaner();
             if (cleaner != null) {
                 postIdobataId = cleaner.getIdobataId();
-                mainMessage = "今日の掃除当番です\"}";
+                mainMessage = "今日の掃除当番です";
             } else {
                 postIdobataId = "here";
-                mainMessage = "今日は誰もオフィスにいないみたい(・x・)\"}";
+                mainMessage = "今日は誰もオフィスにいないみたい(・x・)";
             }
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             postIdobataId = "all ";
             errorMessage = e.getMessage();
-            mainMessage = "前回掃除した人は誰？(・x・)\"}";
+            mainMessage = "前回掃除した人は誰？(・x・)";
         }
         StringBuilder request = new StringBuilder();
-        request.append("{\"source\":\"@");
+        request.append("{");
+        request.append("\"source\":\"");
+        request.append("@");
         request.append(postIdobataId);
         request.append(errorMessage);
         request.append(mainMessage);
+        request.append("\"");
+        request.append("}");
         String requestJson = request.toString();
         return requestJson;
     }
