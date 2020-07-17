@@ -52,10 +52,7 @@ public class HookComponent {
         HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
         try {
             String answer = restTemplate.postForObject(URL, entity, String.class);
-        } catch (
-                HttpClientErrorException e) {
-            e.printStackTrace();
-        } catch (HttpServerErrorException e) {
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
             e.printStackTrace();
         }
     }
