@@ -2,12 +2,15 @@
 2Dmiffyが給湯室当番のidobata通知をしてくれるアプリ
 ## 開発環境
 - MacOS 10.15.5 Catalina
-- IDA
+- IDE
     - Intellij(2020.1)
+- 言語
+    - Java (11.0.7)
 - フレームワーク
     - SpringBoot(2.3.1)
 - DB
     - PostgreSQL(12.3)
+
 ## 画面説明
 https://miffy-for-idobata.herokuapp.com/asf4members
 でmiffyアプリのトップページにアクセスできる
