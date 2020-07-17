@@ -5,43 +5,16 @@ import ajd4jp.Holiday;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.repository.Asf4MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
 
-import java.time.ZoneId;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static ajd4jp.iso.AJD310.now;
-
 @Service
-@EnableScheduling
 @RequiredArgsConstructor
 public class HookService {
     public final Asf4MemberRepository asf4MemberRepository;
-    private RestTemplate restTemplate;
-
-    @Autowired
-    public HookService(Asf4MemberRepository asf4MemberRepository, RestTemplateBuilder builder) {
-        this.asf4MemberRepository = asf4MemberRepository;
-        this.restTemplate = builder.build();
-    }
-
-    /**
-     * hookのURL
-     */
-    private static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用;
-    //private static final String URL = "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用;
 
     /**
      * テーブルのデータ一覧を返す。
@@ -103,7 +76,7 @@ public class HookService {
      *
      * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
-     private String makeRequest(AJD date) {
+    public String makeRequest(AJD date) {
         if (isHoliday(date)) {
             return null;
         }
@@ -133,28 +106,5 @@ public class HookService {
         request.append(mainMessage);
         String requestJson = request.toString();
         return requestJson;
-    }
-
-    /**
-     * idobataのhookを使用して、今日の掃除当番をお知らせする。
-     * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
-     */
-    @Scheduled(cron = "0 30 16-17 * * 1-5", zone = "Asia/Tokyo")
-    public void postToHook() {
-        String requestJson = makeRequest(now(ZoneId.of("Asia/Tokyo")));
-        if (requestJson == null) {
-            return;
-        }
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> entity = new HttpEntity<String>(requestJson, headers);
-        try {
-            String answer = restTemplate.postForObject(URL, entity, String.class);
-        } catch (
-            HttpClientErrorException e) {
-            e.printStackTrace();
-        } catch (HttpServerErrorException e) {
-            e.printStackTrace();
-        }
     }
 }
