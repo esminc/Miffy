@@ -100,10 +100,14 @@ public class HookService {
             mainMessage = "前回掃除した人は誰？(・x・)\"}";
         }
         StringBuilder request = new StringBuilder();
-        request.append("{\"source\":\"@");
+        request.append("{");
+        request.append("\"source\":\"");
+        request.append("@");
         request.append(postIdobataId);
         request.append(errorMessage);
         request.append(mainMessage);
+        request.append("\"");
+        request.append("}");
         String requestJson = request.toString();
         return requestJson;
     }
