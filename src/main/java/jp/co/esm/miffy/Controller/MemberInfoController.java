@@ -1,7 +1,7 @@
 package jp.co.esm.miffy.Controller;
 
 import jp.co.esm.miffy.entity.Asf4Member;
-import jp.co.esm.miffy.form.ErrorCheck;
+import jp.co.esm.miffy.form.Check;
 import jp.co.esm.miffy.service.Asf4MemberService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.NoSuchElementException;
 @Getter
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes(types = {Asf4Member.class,ErrorCheck.class})
+@SessionAttributes(types = {Asf4Member.class, Check.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
 
@@ -59,8 +59,8 @@ public class MemberInfoController {
      * @return 検索画面へのパス
      */
     @RequestMapping("/search")
-    public String search(Asf4Member asf4Member, ErrorCheck errorCheck) {
-        errorCheck.setCheck("no");
+    public String search(Asf4Member asf4Member,Check check) {
+        check.setErrorCheck("no");
         asf4Member.setIdobataId("");
         return "search";
     }
@@ -75,7 +75,7 @@ public class MemberInfoController {
      * @return 確認画面か検索画面へのパス
      */
     @RequestMapping("/confirm")
-    public String confirm(Asf4Member asf4Member, ErrorCheck errorCheck) {
+    public String confirm(Asf4Member asf4Member, Check check) {
         try {
             Asf4Member asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
             asf4Member.setId(asf4MemberOptional.getId());
@@ -85,7 +85,7 @@ public class MemberInfoController {
             asf4Member.setSkip(asf4MemberOptional.isSkip());
             return "confirm";
         } catch (NoSuchElementException e) {
-            errorCheck.setCheck("Yes");
+            check.setErrorCheck("Yes");
             System.out.println("エラーをcatchしました");
             return "search";
         }
