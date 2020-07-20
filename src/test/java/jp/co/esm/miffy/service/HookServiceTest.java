@@ -5,6 +5,7 @@ import ajd4jp.Holiday;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
@@ -33,6 +34,9 @@ class HookServiceTest {
         PowerMockito.mockStatic(Holiday.class);
     }
 
+    @Mock
+    Holiday holiday;
+
     @Test
     public void makeRequestTest() {
         // 準備
@@ -47,7 +51,7 @@ class HookServiceTest {
     @Test
     public void makeRequestOnHolidayTest() {
         // 準備
-        Mockito.doReturn(Holiday.UMI).when(Holiday.getHoliday(Mockito.any(AJD.class)));
+        Mockito.doReturn(Holiday.UMI).when(holiday).getHoliday(now(ZoneId.of("Asia/Tokyo")));
         //Mockito.when(Holiday.getHoliday(now(ZoneId.of("Asia/Tokyo")))).thenReturn(Holiday.UMI);
         // 実行
         String actualRequest = hookService.makeRequest(now(ZoneId.of("Asia/Tokyo")));
