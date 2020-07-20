@@ -1,7 +1,5 @@
 package jp.co.esm.miffy.service;
 
-import ajd4jp.AJD;
-import ajd4jp.Holiday;
 import jp.co.esm.miffy.component.HollidayWrap;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
@@ -14,6 +12,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import java.time.ZoneId;
 
 import static ajd4jp.iso.AJD310.now;
@@ -40,8 +39,7 @@ class HookServiceTest {
     @Test
     public void makeRequestTest() {
         // 準備
-       // PowerMockito.doReturn(null).when(Holiday).getHoliday(Mockito.any(AJD.class)));
-        Mockito.when(Holiday.getHoliday(Mockito.any(AJD.class))).thenReturn(null);
+        Mockito.doReturn(false).when(hollidayWrap).isHoliday(now(ZoneId.of("Asia/Tokyo")));
         // 実行
         String actualRequest = hookService.makeRequest(now(ZoneId.of("Asia/Tokyo")));
         // 検証
@@ -51,14 +49,10 @@ class HookServiceTest {
     @Test
     public void makeRequestOnHolidayTest() {
         // 準備
-       // Mockito.doReturn(Holiday.UMI).when(holiday).getHoliday(now(ZoneId.of("Asia/Tokyo")));
-
-        Mockito.doReturn(false).when(hollidayWrap).isHoliday(now(ZoneId.of("Asia/Tokyo")));
-        //doThrow(new RuntimeException()).when(HollidayWrap.isHoliday());
-        //Mockito.when(Holiday.getHoliday(now(ZoneId.of("Asia/Tokyo")))).thenReturn(Holiday.UMI);
+        Mockito.doReturn(true).when(hollidayWrap).isHoliday(now(ZoneId.of("Asia/Tokyo")));
         // 実行
         String actualRequest = hookService.makeRequest(now(ZoneId.of("Asia/Tokyo")));
         // 検証
-        assertEquals("{\"source\":\"@test2 今日の掃除当番です\"}", actualRequest);
+        assertEquals(null, actualRequest);
     }
 }
