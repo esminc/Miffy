@@ -2,6 +2,7 @@ package jp.co.esm.miffy.service;
 
 import ajd4jp.AJD;
 import ajd4jp.Holiday;
+import jp.co.esm.miffy.component.HollidayWrap;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.repository.Asf4MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -77,13 +78,15 @@ public class HookService {
      * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
     public String makeRequest(AJD date) {
-        if (isHoliday(date)) {
+        if (HollidayWrap.isHoliday(date)) {
             return null;
         }
+        System.out.println("1");
         String postIdobataId = null;
         String errorMessage = " ";
         String mainMessage = null;
         Asf4Member cleaner;
+        System.out.println("2");
         try {
             cleaner = getCleaner();
             if (cleaner != null) {
@@ -99,6 +102,7 @@ public class HookService {
             errorMessage = e.getMessage();
             mainMessage = "前回掃除した人は誰？(・x・)";
         }
+        System.out.println("3");
         StringBuilder request = new StringBuilder();
         request.append("{");
         request.append("\"source\":\"");
