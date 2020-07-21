@@ -1,7 +1,7 @@
 package jp.co.esm.miffy.service;
 
 import ajd4jp.AJD;
-import jp.co.esm.miffy.component.HollidayWrap;
+import jp.co.esm.miffy.component.HolidayWrap;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.repository.Asf4MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +67,7 @@ public class HookService {
      * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
     public String makeRequest(AJD date) {
-        if (HollidayWrap.isHoliday(date)) {
+        if (HolidayWrap.isHoliday(date)) {
             return null;
         }
         System.out.println("1");

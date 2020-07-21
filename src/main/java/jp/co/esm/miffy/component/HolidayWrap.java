@@ -3,7 +3,7 @@ package jp.co.esm.miffy.component;
 import ajd4jp.AJD;
 import ajd4jp.Holiday;
 
-public class HollidayWrap {
+public class HolidayWrap {
     /**
      * 祝日かどうかを判定する。
      *
