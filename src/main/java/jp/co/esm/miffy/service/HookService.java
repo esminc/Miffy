@@ -1,6 +1,7 @@
 package jp.co.esm.miffy.service;
 
 import ajd4jp.AJD;
+import ajd4jp.Holiday;
 import jp.co.esm.miffy.component.HolidayWrap;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.repository.Asf4MemberRepository;
@@ -67,7 +68,8 @@ public class HookService {
      * @return hookのURLへPOSTリクエストするJSON形式テキストを返す。祝日はnullを返す。
      */
     public String makeRequest(AJD date) {
-        if (HolidayWrap.isHoliday(date)) {
+        if (isHoliday(date)) {
+            System.out.println("ここまで");
             return null;
         }
         System.out.println("1");
@@ -103,5 +105,15 @@ public class HookService {
         request.append("}");
         String requestJson = request.toString();
         return requestJson;
+    }
+
+    /**
+     * 祝日かどうかを判定する。
+     *
+     * @param date 祝日判定対象日。
+     * @return 祝日ならばtrue、祝日でなければfalseを返す。
+     */
+    public boolean isHoliday(AJD date) {
+        return Holiday.getHoliday(date) != null;
     }
 }
