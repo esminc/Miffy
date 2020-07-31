@@ -1,11 +1,17 @@
-INSERT INTO members (name, idobata_id) VALUES
-('永和 一郎', 'here1'),
-('永和 二郎', 'here2'),
-('前田 竜也', 'RyuyaMaeda');
-INSERT INTO members (name, idobata_id, is_cleaner) VALUES
-('上坂', 'uesaka-seiya', TRUE);
-
-INSERT INTO members (name, idobata_id, skip) VALUES
-('永和 二郎', 'all1', FALSE),
-('永和 三郎', 'test', TRUE);
-
+INSERT INTO members (name, idobata_id, skip, is_cleaner) VALUES
+('高砂 笑', 'eishida', FALSE, TRUE),
+('川瀬 雄翔', 'y-kawase', FALSE, FALSE),
+('福田 さき子', 'SakikoFukuda', TRUE, FALSE),
+('仲村 新太', 'a-nakamura1015', FALSE, FALSE),
+('渡辺 孝二', 'esm-watanabe', FALSE, FALSE),
+('三浦 茜', 'kimidoriam', FALSE, FALSE),
+('高原 憲史', 'kj-takahara', FALSE, FALSE),
+('石藏 修司', 's-ishikura', TRUE, FALSE),
+('鈴木 佳弘', 'ysuzuki', TRUE, FALSE),
+('松並 英明', 'mahaker', TRUE, FALSE),
+('山口 峻司', 'shunji-yamaguchi', FALSE, FALSE),
+('豊嶋 崇靖', 'tToyoshima', TRUE, FALSE),
+('岡本 卓也', 'tokamoto', TRUE, FALSE),
+('橋本 雄一', 'u-hashi', FALSE, FALSE),
+('前田 竜弥', 'RyuyaMaeda', FALSE, FALSE),
+('上坂 静耶', 'uesaka-seiya', FALSE, FALSE);
