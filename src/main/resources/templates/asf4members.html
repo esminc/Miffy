@@ -5,6 +5,11 @@
     <title>ASF Co-Class Members</title>
 </head>
 <body>
+<form method="post" action="/confirm" th:object="${check}">
+    <div th:if="*{idobataIdCheck}">
+        <font color="red"><p th:text="既に同じidobataIDがあるため更新されませんでした"></p></font>
+    </div>
+</form>
 <table>
     <thead>
     <tr>

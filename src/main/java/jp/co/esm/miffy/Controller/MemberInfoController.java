@@ -49,7 +49,7 @@ public class MemberInfoController {
      * @return
      */
     @RequestMapping("asf4members")
-    public String index(Model model, Asf4Member asf4Member) {
+    public String index(Model model, Asf4Member asf4Member, Check check) {
         formReset = false;
         asf4Member.setId(null);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
@@ -144,8 +144,19 @@ public class MemberInfoController {
      * @return データ一覧画面URLをリダイレクト先として指定したもの
      */
     @RequestMapping("/complete")
-    public String complete(Asf4Member asf4Member) {
-        asf4MemberService.update(asf4Member);
+    public String complete(Asf4Member asf4Member, Check check) {
+        try {
+            Asf4Member asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
+            if (asf4Member.getId() == asf4MemberOptional.getId()) {
+                check.setIdobataIdCheck("off");
+                asf4MemberService.update(asf4Member);
+            } else {
+                check.setIdobataIdCheck("Yes");
+            }
+        } catch (NoSuchElementException e) {
+            check.setIdobataIdCheck("off");
+            asf4MemberService.update(asf4Member);
+        }
         return "redirect:/asf4members";
     }
 }
