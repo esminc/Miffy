@@ -23,7 +23,7 @@ class Asf4MemberServiceTest {
 
     @Test
     @Sql({"/schema.sql", "/data.sql"})
-    public void selectAllTest() {
+    public void selectAll_GetAllData() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
         expectedMembers.add(new Asf4Member(1,"スナッフィー", "test1", "4", false));
@@ -37,7 +37,7 @@ class Asf4MemberServiceTest {
 
     @Test
     @Sql(statements = {"DELETE FROM members;"})
-    public void selectAllNoData() {
+    public void selectAll_NoData() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
         // 実行
@@ -48,7 +48,7 @@ class Asf4MemberServiceTest {
 
     @Test
     @Sql({"/schema.sql","/data.sql"})
-    public void selectByIdobataIdTest() {
+    public void selectByIdobataId_GetExpectedMember() {
         // 準備
         Asf4Member expectedSelectedMember = new Asf4Member(1,"スナッフィー", "test1", "4", false);
         // 実行
@@ -59,7 +59,7 @@ class Asf4MemberServiceTest {
 
     @Test
     @Sql({"/schema.sql", "/data.sql"})
-    public void selectByIdobataIdException() {
+    public void selectByIdobataId_CatchNoSuchElementException() {
         try {
             Asf4Member member = asf4MemberService.selectByidobataId("failId");
             fail();
@@ -70,7 +70,7 @@ class Asf4MemberServiceTest {
 
     @Test
     @Sql({"/schema.sql","/data.sql"})
-    public void updateTest() {
+    public void update_editTest() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
         expectedMembers.add(new Asf4Member(1,"ポピーさん", "test4", "4", false));
@@ -85,7 +85,7 @@ class Asf4MemberServiceTest {
 
     @Test
     @Sql({"/schema.sql","/data.sql"})
-    public void insertTest() {
+    public void update_createNewMemberTest() {
         // 準備
         List<Asf4Member> expectedMembers = asf4MemberService.selectAll();
         expectedMembers.add(new Asf4Member(4,"ポピーさん", "test4", "4", false));
