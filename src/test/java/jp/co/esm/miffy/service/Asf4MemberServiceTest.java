@@ -72,6 +72,21 @@ class Asf4MemberServiceTest {
     @Sql({"/schema.sql","/data.sql"})
     public void updateTest() {
         // 準備
+        List<Asf4Member> expectedMembers = new ArrayList<>();
+        expectedMembers.add(new Asf4Member(1,"ポピーさん", "test4", "4", false));
+        expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false));
+        expectedMembers.add(new Asf4Member(3,"バーバラ", "test3", "4", true));
+        // 実行
+        asf4MemberService.update(new Asf4Member(1,"ポピーさん", "test4", "4", false));
+        List<Asf4Member> actualMembers = asf4MemberService.selectAll();
+        // 検証
+        assertEquals(expectedMembers, actualMembers);
+    }
+
+    @Test
+    @Sql({"/schema.sql","/data.sql"})
+    public void insertTest() {
+        // 準備
         List<Asf4Member> expectedMembers = asf4MemberService.selectAll();
         expectedMembers.add(new Asf4Member(4,"ポピーさん", "test4", "4", false));
         // 実行
