@@ -9,8 +9,10 @@ import org.springframework.test.context.jdbc.Sql;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 @Transactional
@@ -53,6 +55,17 @@ class Asf4MemberServiceTest {
         Asf4Member actualSelectedMember = asf4MemberService.selectByidobataId("test1");
         // 検証
         assertEquals(expectedSelectedMember, actualSelectedMember);
+    }
+
+    @Test
+    @Sql({"/schema.sql", "/data.sql"})
+    public void selectByIdobataIdException() {
+        try {
+            Asf4Member member = asf4MemberService.selectByidobataId("failId");
+            fail();
+        } catch (NoSuchElementException e) {
+            assertEquals("指定のIDに一致する情報がありません。", e.getMessage());
+        }
     }
 
     @Test
