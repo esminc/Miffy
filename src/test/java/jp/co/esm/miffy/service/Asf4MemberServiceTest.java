@@ -34,6 +34,17 @@ class Asf4MemberServiceTest {
     }
 
     @Test
+    @Sql(statements = {"DELETE FROM members;"})
+    public void selectAllNoData() {
+        // 準備
+        List<Asf4Member> expectedMembers = new ArrayList<>();
+        // 実行
+        List<Asf4Member> actualMembers = asf4MemberService.selectAll();
+        // 検証
+        assertEquals(expectedMembers, actualMembers);
+    }
+
+    @Test
     @Sql({"/schema.sql","/data.sql"})
     public void selectByIdobataIdTest() {
         // 準備
