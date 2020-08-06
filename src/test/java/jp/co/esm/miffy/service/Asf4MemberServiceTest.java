@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 @Transactional
+@Sql("test-data.sql")
 class Asf4MemberServiceTest {
 
     @Autowired
     private Asf4MemberService asf4MemberService;
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void selectAll_GetAllData() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
@@ -47,7 +47,6 @@ class Asf4MemberServiceTest {
     }
 
     @Test
-    @Sql({"/schema.sql","/data.sql"})
     public void selectByIdobataId_GetExpectedMember() {
         // 準備
         Asf4Member expectedSelectedMember = new Asf4Member(1,"スナッフィー", "test1", "4", false);
@@ -58,7 +57,6 @@ class Asf4MemberServiceTest {
     }
 
     @Test
-    @Sql({"/schema.sql", "/data.sql"})
     public void selectByIdobataId_ThrowNoSuchElementException() {
         try {
             Asf4Member member = asf4MemberService.selectByidobataId("failId");
@@ -69,7 +67,6 @@ class Asf4MemberServiceTest {
     }
 
     @Test
-    @Sql({"/schema.sql","/data.sql"})
     public void update_editTest() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
@@ -84,7 +81,6 @@ class Asf4MemberServiceTest {
     }
 
     @Test
-    @Sql({"/schema.sql","/data.sql"})
     public void update_createNewMemberTest() {
         // 準備
         List<Asf4Member> expectedMembers = asf4MemberService.selectAll();
