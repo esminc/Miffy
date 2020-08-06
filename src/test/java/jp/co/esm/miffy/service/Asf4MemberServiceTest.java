@@ -59,7 +59,7 @@ class Asf4MemberServiceTest {
 
     @Test
     @Sql({"/schema.sql", "/data.sql"})
-    public void selectByIdobataId_CatchNoSuchElementException() {
+    public void selectByIdobataId_ThrowNoSuchElementException() {
         try {
             Asf4Member member = asf4MemberService.selectByidobataId("failId");
             fail();
