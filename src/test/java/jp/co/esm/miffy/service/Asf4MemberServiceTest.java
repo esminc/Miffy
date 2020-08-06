@@ -36,7 +36,7 @@ class Asf4MemberServiceTest {
     }
 
     @Test
-    @Sql(statements = {"DELETE FROM members;"})
+    @Sql(statements = "DELETE FROM members;")
     public void selectAll_NoData() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
