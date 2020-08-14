@@ -23,10 +23,6 @@ import java.util.Optional;
 @SessionAttributes(types = {Asf4Member.class, Check.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
-    /**
-     * 入力フォームをリセットするかどうかを判定する変数
-     */
-    private boolean formReset = false;
 
     /**
      * entityオブジェクトを初期化して返却する
@@ -50,7 +46,6 @@ public class MemberInfoController {
      */
     @RequestMapping("asf4members")
     public String index(Model model, Asf4Member asf4Member, Check check) {
-        formReset = false;
         asf4Member.setId(null);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
@@ -66,7 +61,7 @@ public class MemberInfoController {
      * @return 検索画面へのパス
      */
     @RequestMapping("/search")
-    public String search(Asf4Member asf4Member, Check check) {
+    public String search(Asf4Member asf4Member,Check check) {
         check.setErrorCheck("no");
         asf4Member.setIdobataId("");
         check.setDeleteCheck("off");
@@ -91,7 +86,6 @@ public class MemberInfoController {
             asf4Member.setIdobataId(asf4MemberOptional.getIdobataId());
             asf4Member.setFloor(asf4MemberOptional.getFloor());
             asf4Member.setSkip(asf4MemberOptional.isSkip());
-            formReset = true;
             return "confirm";
         } catch (NoSuchElementException e) {
             check.setErrorCheck("Yes");
