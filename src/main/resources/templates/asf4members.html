@@ -5,11 +5,9 @@
     <title>ASF Co-Class Members</title>
 </head>
 <body>
-<form method="post" action="/confirm" th:object="${check}">
-    <div th:if="*{idobataIdCheck}">
-        <font color="red"><p th:text="既に同じidobataIDがあるため更新されませんでした"></p></font>
-    </div>
-</form>
+<div th:if="${check.idobataIdCheck}">
+    <font color="red"><p th:text="既に同じidobataIDがあるため更新されませんでした"></p></font>
+</div>
 <table>
     <thead>
     <tr>
@@ -26,8 +24,8 @@
         <td th:text="*{skip}"></td>
 </table>
 <form method="post" action="/search" th:object="${asf4Member}">
-  <input type="submit" value="変更"/>
-  <input type="submit" formaction="/create" value="新規登録"/>
+    <input type="submit" value="変更"/>
+    <input type="submit" formaction="/create" value="新規登録"/>
 </form>
 </body>
 </html>
