@@ -5,6 +5,5 @@ CREATE TABLE members (
   name VARCHAR(255) NOT NULL,
   idobata_id VARCHAR(20) NOT NULL,
   floor VARCHAR(20) DEFAULT 4,
-  skip BOOLEAN DEFAULT FALSE,
-  delete_flag VARCHAR(20) DEFAULT 0
+  skip BOOLEAN DEFAULT FALSE
 );
