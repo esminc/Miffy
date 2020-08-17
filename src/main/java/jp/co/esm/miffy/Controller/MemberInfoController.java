@@ -48,6 +48,7 @@ public class MemberInfoController {
     @RequestMapping("asf4members")
     public String index(Model model, Asf4Member asf4Member, Check check) {
         asf4Member.setId(null);
+        check.setIdobataIdCheck(false);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
         // asf4MemberService.hook();    // デバッグ用のhookメソッドの呼び出し
@@ -73,7 +74,7 @@ public class MemberInfoController {
      * 確認画面か検索画面に遷移する
      * 検索をして、テーブルに一致する項目がある場合は、確認画面に遷移する。
      * 検索をして、テーブルに一致する項目がない場合は、entityオブジェクト"asf4Member"のidobataIdに文字列""をsetすることで、
-     * エラーメッセージ付きの検索画面に遷移するNo
+     * エラーメッセージ付きの検索画面に遷移する
      *
      * @param asf4Member entityオブジェクト
      * @return 確認画面か検索画面へのパス
@@ -103,7 +104,7 @@ public class MemberInfoController {
      */
     @RequestMapping("/delete_confirm")
     public String delete_confirm(Asf4Member asf4Member) {
-        return "/delete_confirm";
+        return "delete_confirm";
     }
 
     /**
@@ -158,6 +159,7 @@ public class MemberInfoController {
                 asf4MemberService.update(asf4Member);
             } else {
                 check.setIdobataIdCheck(true);
+                return "update";
             }
         } catch (NoSuchElementException e) {
             check.setIdobataIdCheck(false);
