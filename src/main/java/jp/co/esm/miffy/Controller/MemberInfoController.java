@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
@@ -20,7 +21,7 @@ import java.util.Optional;
 @Getter
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes(types = {Asf4Member.class, Check.class})
+@SessionAttributes(types = {Asf4Member.class, Check.class, BindingResult.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
 
@@ -62,17 +63,17 @@ public class MemberInfoController {
      */
     @RequestMapping("/search")
     public String search(Asf4Member asf4Member,Check check) {
-        check.setErrorCheck("no");
+        check.setErrorCheck(false);
         asf4Member.setIdobataId("");
-        check.setDeleteCheck("off");
+        check.setDeleteCheck(false);
         return "search";
     }
 
     /**
      * 確認画面か検索画面に遷移する
      * 検索をして、テーブルに一致する項目がある場合は、確認画面に遷移する。
-     * 検索をして、テーブルに一致する項目がない場合は、entityオブジェクト"asf4Member"のidobataIdに文字列"Yes"をsetすることで、
-     * エラーメッセージ付きの検索画面に遷移する
+     * 検索をして、テーブルに一致する項目がない場合は、entityオブジェクト"asf4Member"のidobataIdに文字列""をsetすることで、
+     * エラーメッセージ付きの検索画面に遷移するNo
      *
      * @param asf4Member entityオブジェクト
      * @return 確認画面か検索画面へのパス
@@ -88,7 +89,7 @@ public class MemberInfoController {
             asf4Member.setSkip(asf4MemberOptional.isSkip());
             return "confirm";
         } catch (NoSuchElementException e) {
-            check.setErrorCheck("Yes");
+            check.setErrorCheck(true);
             System.out.println("エラーをcatchしました");
             return "search";
         }
@@ -153,13 +154,13 @@ public class MemberInfoController {
         try {
             Asf4Member asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
             if (asf4Member.getId() == asf4MemberOptional.getId()) {
-                check.setIdobataIdCheck("off");
+                check.setIdobataIdCheck(false);
                 asf4MemberService.update(asf4Member);
             } else {
-                check.setIdobataIdCheck("Yes");
+                check.setIdobataIdCheck(true);
             }
         } catch (NoSuchElementException e) {
-            check.setIdobataIdCheck("off");
+            check.setIdobataIdCheck(false);
             asf4MemberService.update(asf4Member);
         }
         return "redirect:/asf4members";

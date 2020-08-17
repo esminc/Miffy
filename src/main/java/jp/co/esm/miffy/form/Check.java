@@ -9,15 +9,15 @@ public class Check {
     /**
      * 入力値チェックに用いる変数
      */
-    private String errorCheck;
+    private boolean errorCheck;
 
     /**
      * 確認画面で削除確認するかどうかを決める変数
      */
-    private String deleteCheck = "off";
+    private boolean deleteCheck = false;
 
     /**
      * 同じidobataidがDBに存在するかどうかを決める変数
      */
-    private String idobataIdCheck = "off";
+    private boolean idobataIdCheck = false;
 }
