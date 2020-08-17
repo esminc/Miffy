@@ -95,6 +95,17 @@ public class MemberInfoController {
     }
 
     /**
+     * 削除確認画面に遷移する
+     *
+     * @param asf4Member entityオブジェクト
+     * @return 削除確認画面へのパス
+     */
+    @RequestMapping("/delete_confirm")
+    public String delete_confirm(Asf4Member asf4Member) {
+        return "/delete_confirm";
+    }
+
+    /**
      * 削除画面に遷移する
      *
      * @param asf4Member entityオブジェクト

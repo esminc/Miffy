@@ -4,28 +4,17 @@
     <meta charset="UTF-8">
     <title>確認画面</title>
 </head>
-<form method="post" action="/update" th:object="${check}">
-    <div th:if="*{deleteCheck} eq '削除'">
-        <p> 以下の情報を本当に削除しても大丈夫ですか？</p>
-        <p th:text="'name： ' + ${asf4Member.name}">ここに名前が表示されます</p>
-        <p th:text="'idobataID： ' + ${asf4Member.idobataId}">ここにidobataIDが表示されます</p>
-        <p th:text="'floor： ' + ${asf4Member.floor}">ここにフロア情報が表示されます</p>
-        <p th:text="'skip： ' + ${asf4Member.skip}">ここにskip内容が表示されます</p>
-        <input type="submit" formaction="/delete" value="削除" name="deleteCheck"/>
-        <input type="submit" value="戻る" formaction="/asf4members"/>
-    </div>
-    <div th:if="*{deleteCheck} eq 'off'">
-        <p>登録内容を確認し、変更したい場合は「変更」ボタンを押下してください。</p>
-        <p>登録情報を削除したい場合は、「削除」ボタンを押下してください。</p>
-        <p>検索しなおしたい時は戻るボタンを押してください。</p>
-        <p th:text="'name： ' + ${asf4Member.name}">ここに名前が表示されます</p>
-        <p th:text="'idobataID： ' + ${asf4Member.idobataId}">ここにidobataIDが表示されます</p>
-        <p th:text="'floor： ' + ${asf4Member.floor}">ここにフロア情報が表示されます</p>
-        <p th:text="'skip： ' + ${asf4Member.skip}">ここにskip内容が表示されます</p>
-        <input type="submit" value="変更"/>
-        <input type="submit" formaction="/confirm" value="削除" name="deleteCheck"/>
-        <input type="submit" value="戻る" formaction="/asf4members"/>
-    </div>
+<form method="post" action="/update" th:object="${asf4Member}">
+    <p>登録内容を確認し、変更したい場合は「変更」ボタンを押下してください。</p>
+    <p>登録情報を削除したい場合は、「削除」ボタンを押下してください。</p>
+    <p>検索しなおしたい時は戻るボタンを押してください。</p>
+    <p th:text="'name： ' + *{name}">ここに名前が表示されます</p>
+    <p th:text="'idobataID： ' + *{idobataId}">ここにidobataIDが表示されます</p>
+    <p th:text="'floor： ' + *{floor}">ここにフロア情報が表示されます</p>
+    <p th:text="'skip： ' + *{skip}">ここにskip内容が表示されます</p>
+    <input type="submit" value="変更"/>
+    <input type="submit" value="削除" formaction="/delete_confirm"/>
+    <input type="submit" value="戻る" formaction="/asf4members"/>
 </form>
 </body>
 </html>
