@@ -73,7 +73,7 @@ public class MemberInfoController {
     /**
      * 確認画面か検索画面に遷移する
      * 検索をして、テーブルに一致する項目がある場合は、確認画面に遷移する。
-     * 検索をして、テーブルに一致する項目がない場合は、entityオブジェクト"asf4Member"のidobataIdに文字列""をsetすることで、
+     * 検索をして、テーブルに一致する項目がない場合は、checkオブジェクトのerrorCheckにtrueをsetすることで、
      * エラーメッセージ付きの検索画面に遷移する
      *
      * @param asf4Member entityオブジェクト
