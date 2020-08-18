@@ -11,12 +11,15 @@
     <th>No.</th>
     <th>氏名</th>
     <th>idobata</th>
+    <th>skip</th>
   </tr>
   </thead>
 <tr th:each="list : ${asf4MemberList}" th:object="${list}">
   <td th:text="*{id}"></td>
   <td th:text="*{name}"></td>
   <td th:text="*{idobataId}"></td>
+  <td th:text="*{skip}"></td>
+
 </table>
 </body>
 </html>
