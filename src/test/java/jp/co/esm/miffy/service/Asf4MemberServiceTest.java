@@ -26,9 +26,9 @@ class Asf4MemberServiceTest {
     public void selectAll_GetAllData() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
-        expectedMembers.add(new Asf4Member(1,"スナッフィー", "test1", "4", false));
-        expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false));
-        expectedMembers.add(new Asf4Member(3,"バーバラ", "test3", "4", true));
+        expectedMembers.add(new Asf4Member(1,"スナッフィー", "test1", "4", false, true));
+        expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false ,false));
+        expectedMembers.add(new Asf4Member(3,"バーバラ", "test3", "4", true,false));
         // 実行
         List<Asf4Member> actualMembers = asf4MemberService.selectAll();
         // 検証
@@ -49,7 +49,7 @@ class Asf4MemberServiceTest {
     @Test
     public void selectByIdobataId_GetExpectedMember() {
         // 準備
-        Asf4Member expectedSelectedMember = new Asf4Member(1,"スナッフィー", "test1", "4", false);
+        Asf4Member expectedSelectedMember = new Asf4Member(1,"スナッフィー", "test1", "4", false,true);
         // 実行
         Asf4Member actualSelectedMember = asf4MemberService.selectByidobataId("test1");
         // 検証
@@ -70,11 +70,11 @@ class Asf4MemberServiceTest {
     public void update_editTest() {
         // 準備
         List<Asf4Member> expectedMembers = new ArrayList<>();
-        expectedMembers.add(new Asf4Member(1,"ポピーさん", "test4", "4", false));
-        expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false));
-        expectedMembers.add(new Asf4Member(3,"バーバラ", "test3", "4", true));
+        expectedMembers.add(new Asf4Member(1,"ポピーさん", "test4", "4", false, true));
+        expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false,false));
+        expectedMembers.add(new Asf4Member(3,"バーバラ", "test3", "4", true,false));
         // 実行
-        asf4MemberService.update(new Asf4Member(1,"ポピーさん", "test4", "4", false));
+        asf4MemberService.update(new Asf4Member(1,"ポピーさん", "test4", "4", false,true));
         List<Asf4Member> actualMembers = asf4MemberService.selectAll();
         // 検証
         assertEquals(expectedMembers, actualMembers);
@@ -84,9 +84,9 @@ class Asf4MemberServiceTest {
     public void update_createNewMemberTest() {
         // 準備
         List<Asf4Member> expectedMembers = asf4MemberService.selectAll();
-        expectedMembers.add(new Asf4Member(4,"ポピーさん", "test4", "4", false));
+        expectedMembers.add(new Asf4Member(4,"ポピーさん", "test4", "4", false,false));
         // 実行
-        asf4MemberService.update(new Asf4Member(4,"ポピーさん", "test4", "4", false));
+        asf4MemberService.update(new Asf4Member(4,"ポピーさん", "test4", "4", false,false));
         List<Asf4Member> actualMembers = asf4MemberService.selectAll();
         // 検証
         assertEquals(expectedMembers, actualMembers);
