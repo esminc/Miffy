@@ -6,20 +6,24 @@
 </head>
 <body>
 <table>
-  <thead>
-  <tr>
-    <th>No.</th>
-    <th>氏名</th>
-    <th>idobata</th>
-    <th>skip</th>
-  </tr>
-  </thead>
-<tr th:each="list : ${asf4MemberList}" th:object="${list}">
-  <td th:text="*{id}"></td>
-  <td th:text="*{name}"></td>
-  <td th:text="*{idobataId}"></td>
-  <td th:text="*{skip}"></td>
-
+    <thead>
+    <tr>
+        <th>No.</th>
+        <th>氏名</th>
+        <th>idobata</th>
+        <th>skip</th>
+    </tr>
+    </thead>
+    <tr th:each="list : ${asf4MemberList}" th:object="${list}">
+        <td th:text="*{id}"></td>
+        <td th:text="*{name}"></td>
+        <td th:text="*{idobataId}"></td>
+        <td th:text="*{skip}"></td>
 </table>
+<form method="post" action="/search" th:object="${asf4Member}">
+  <input type="submit" value="変更"/>
+  <input type="submit" formaction="/create" value="新規登録"/>
+</form>
 </body>
 </html>
+

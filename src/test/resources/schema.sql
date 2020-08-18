@@ -8,4 +8,3 @@ CREATE TABLE members (
   skip BOOLEAN DEFAULT FALSE,
   is_cleaner BOOLEAN DEFAULT FALSE
 );
-

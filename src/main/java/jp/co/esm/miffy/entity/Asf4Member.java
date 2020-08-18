@@ -10,6 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "members")
@@ -37,4 +39,16 @@ public class Asf4Member {
 
   @Column(name = "is_cleaner")
   private boolean isCleaner;
+
+  /**
+   *
+   * @return Map<String,String>型のフロアオブジェクトを返す
+   */
+  public Map<String, String> getFloorItems() {
+    Map<String, String> floorMap = new LinkedHashMap<String, String>();
+    for (int i = 1; i <= 4; i++) {
+      floorMap.put(String.valueOf(i), String.valueOf(i));
+    }
+    return floorMap;
+  }
 }

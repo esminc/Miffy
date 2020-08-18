@@ -17,6 +17,10 @@ public interface Asf4MemberRepository extends JpaRepository<Asf4Member, Integer>
      */
     List<Asf4Member> findAllByOrderByIdAsc();
 
+    Optional<Asf4Member> findByIdAndSkipFalse(int cleanerTodayId);
+
+    Optional<Asf4Member> findByIdobataId(String idobataId);
+
     /**
      * 指定のフロアに一致かつ、Skip==falseかつ、指定のidより大きいidを持つメンバー情報をid昇順に並べた一番上のメンバー情報を取得する
      *
