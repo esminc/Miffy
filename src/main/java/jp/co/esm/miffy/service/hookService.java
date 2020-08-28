@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class HookService {
+public class hookService {
     public final Asf4MemberRepository asf4MemberRepository;
 
     /**
