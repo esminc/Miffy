@@ -8,18 +8,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Setter
 @Getter
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes(types = {Asf4Member.class, Check.class})
+@SessionAttributes(types = {Asf4Member.class, Check.class, BindingResult.class})
 public class MemberInfoController {
     private final Asf4MemberService asf4MemberService;
 
@@ -38,13 +40,15 @@ public class MemberInfoController {
      * データ一覧画面に遷移する
      * entityオブジェクト"asf4Member"のIdにnullをsetすることで、新規登録の際に、idを指定せずにupdate()を
      * 実行するようにしている
+     *
      * @param model
      * @param asf4Member
      * @return
      */
     @RequestMapping("asf4members")
-    public String index(Model model, Asf4Member asf4Member) {
+    public String index(Model model, Asf4Member asf4Member, Check check) {
         asf4Member.setId(null);
+        check.setIdobataIdCheck(false);
         List<Asf4Member> asf4MemberList = asf4MemberService.selectAll();
         model.addAttribute("asf4MemberList", asf4MemberList);
         // asf4MemberService.hook();    // デバッグ用のhookメソッドの呼び出し
@@ -60,15 +64,16 @@ public class MemberInfoController {
      */
     @RequestMapping("/search")
     public String search(Asf4Member asf4Member,Check check) {
-        check.setErrorCheck("no");
+        check.setErrorCheck(false);
         asf4Member.setIdobataId("");
+        check.setDeleteCheck(false);
         return "search";
     }
 
     /**
      * 確認画面か検索画面に遷移する
      * 検索をして、テーブルに一致する項目がある場合は、確認画面に遷移する。
-     * 検索をして、テーブルに一致する項目がない場合は、entityオブジェクト"asf4Member"のidobataIdに文字列"Yes"をsetすることで、
+     * 検索をして、テーブルに一致する項目がない場合は、checkオブジェクトのerrorCheckにtrueをsetすることで、
      * エラーメッセージ付きの検索画面に遷移する
      *
      * @param asf4Member entityオブジェクト
@@ -85,14 +90,38 @@ public class MemberInfoController {
             asf4Member.setSkip(asf4MemberOptional.isSkip());
             return "confirm";
         } catch (NoSuchElementException e) {
-            check.setErrorCheck("Yes");
+            check.setErrorCheck(true);
             System.out.println("エラーをcatchしました");
             return "search";
         }
     }
 
     /**
+     * 削除確認画面に遷移する
+     *
+     * @param asf4Member entityオブジェクト
+     * @return 削除確認画面へのパス
+     */
+    @RequestMapping("/delete_confirm")
+    public String delete_confirm(Asf4Member asf4Member) {
+        return "delete_confirm";
+    }
+
+    /**
+     * 削除画面に遷移する
+     *
+     * @param asf4Member entityオブジェクト
+     * @return 削除画面へのパス
+     */
+    @RequestMapping("/delete")
+    public String delete(Asf4Member asf4Member) {
+        asf4MemberService.delete(asf4Member);
+        return "redirect:/asf4members";
+    }
+
+    /**
      * 新規登録する際に、entityの情報を初期化する(IDは指定しないようにする)
+     *
      * @param asf4Member
      * @return 登録画面へのパス
      */
@@ -122,8 +151,20 @@ public class MemberInfoController {
      * @return データ一覧画面URLをリダイレクト先として指定したもの
      */
     @RequestMapping("/complete")
-    public String complete(Asf4Member asf4Member) {
-        asf4MemberService.update(asf4Member);
+    public String complete(Asf4Member asf4Member, Check check) {
+        try {
+            Asf4Member asf4MemberOptional = asf4MemberService.selectByidobataId(asf4Member.getIdobataId());
+            if (asf4Member.getId() == asf4MemberOptional.getId()) {
+                check.setIdobataIdCheck(false);
+                asf4MemberService.update(asf4Member);
+            } else {
+                check.setIdobataIdCheck(true);
+                return "update";
+            }
+        } catch (NoSuchElementException e) {
+            check.setIdobataIdCheck(false);
+            asf4MemberService.update(asf4Member);
+        }
         return "redirect:/asf4members";
     }
 }

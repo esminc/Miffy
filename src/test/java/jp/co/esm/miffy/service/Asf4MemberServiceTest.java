@@ -81,6 +81,18 @@ class Asf4MemberServiceTest {
     }
 
     @Test
+    public void deleteTest() {
+        // 準備
+        List<Asf4Member> expectedMembers = new ArrayList<Asf4Member>();
+        expectedMembers.add(new Asf4Member(1,"スナッフィー", "test1", "4", false, true));
+        expectedMembers.add(new Asf4Member(2,"ボリス", "test2", "4", false, false));
+        // 実行
+        asf4MemberService.delete(new Asf4Member(3,"バーバラ", "test3","4", true,false));
+        List<Asf4Member> actualMembers = asf4MemberService.selectAll();
+        // 検証
+        assertEquals(expectedMembers, actualMembers);
+    }
+        @Test
     public void update_createNewMemberTest() {
         // 準備
         List<Asf4Member> expectedMembers = asf4MemberService.selectAll();

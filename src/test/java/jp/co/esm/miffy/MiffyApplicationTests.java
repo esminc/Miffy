@@ -9,5 +9,4 @@ class MiffyApplicationTests {
 	@Test
 	void contextLoads() {
 	}
-
 }
