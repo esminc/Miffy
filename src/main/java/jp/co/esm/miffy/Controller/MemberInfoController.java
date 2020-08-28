@@ -126,7 +126,8 @@ public class MemberInfoController {
      * @return 登録画面へのパス
      */
     @RequestMapping("/create")
-    public String create(Asf4Member asf4Member) {
+    public String create(Asf4Member asf4Member, Check check) {
+        check.setIdobataIdCheck(false);
         asf4Member.setId(null);
         asf4Member.setName("");
         asf4Member.setIdobataId("");
