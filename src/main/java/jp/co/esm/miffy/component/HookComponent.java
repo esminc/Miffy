@@ -1,6 +1,6 @@
 package jp.co.esm.miffy.component;
 
-import jp.co.esm.miffy.service.hookService;
+import jp.co.esm.miffy.service.HookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -22,11 +22,11 @@ import static ajd4jp.iso.AJD310.now;
 @Component
 @EnableScheduling
 public class HookComponent {
-    private final hookService hookService;
+    private final jp.co.esm.miffy.service.HookService hookService;
     private RestTemplate restTemplate;
 
     @Autowired
-    public HookComponent(hookService hookService, RestTemplateBuilder builder) {
+    public HookComponent(HookService hookService, RestTemplateBuilder builder) {
         this.hookService = hookService;
         this.restTemplate = builder.build();
     }

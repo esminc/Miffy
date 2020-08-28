@@ -12,7 +12,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class Asf4MemberController {
-    private final jp.co.esm.miffy.service.hookService hookService;
+    private final jp.co.esm.miffy.service.HookService hookService;
     private final HookComponent hookComponent;
 
     @GetMapping("asf4members")
