@@ -6,11 +6,9 @@
 </head>
 <body>
 <p>下記必要事項を記載の上、「検索」ボタンを押下してください。</p><br/>
-<form method="post" action="/confirm" th:object="${check}">
-    <div th:if="*{errorCheck}">
-        <font color="red"><p th:text="検索条件にマッチする情報がありませんでした。"></p></font>
-    </div>
-</form>
+<div th:if="${check.errorCheck}">
+    <font color="red"><p th:text="検索条件にマッチする情報がありませんでした。"></p></font>
+</div>
 <form method="post" action="/confirm" th:object="${asf4Member}">
     idobataID：<input type="text" th:value="*{idobataId}" th:field="*{idobataId}"/>
     <br/>

@@ -53,4 +53,12 @@ public class Asf4MemberService {
     public void update(Asf4Member asf4Member) {
         asf4MemberRepository.saveAndFlush(asf4Member);
     }
+
+    /**
+     * メンバ情報を削除する
+     * @param asf4Member
+     */
+    public void delete(Asf4Member asf4Member) {
+        asf4MemberRepository.delete(asf4Member);
+    }
 }
