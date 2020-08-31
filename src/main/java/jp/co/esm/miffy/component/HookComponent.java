@@ -31,6 +31,7 @@ public class HookComponent {
         this.restTemplate = builder.build();
     }
 
+
     /**
      * hookのURL
      */
