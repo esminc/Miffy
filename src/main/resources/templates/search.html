@@ -2,18 +2,39 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>検索画面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="shortcut icon" href="favicon.ico">
+    <title>メンバー検索｜(・x・)</title>
 </head>
 <body>
-<p>下記必要事項を記載の上、「検索」ボタンを押下してください。</p><br/>
-<div th:if="${check.errorCheck}">
-    <font color="red"><p th:text="検索条件にマッチする情報がありませんでした。"></p></font>
-</div>
-<form method="post" action="/confirm" th:object="${asf4Member}">
-    idobataID：<input type="text" th:value="*{idobataId}" th:field="*{idobataId}"/>
-    <br/>
-    <input type="submit" value="検索"/>
-    <input type="submit" formaction="/asf4members" value="戻る"/>
-</form>
+    <h1 class="jumbotron">編集対象を検索</h1>
+    <div class="container">
+        <p>編集したいメンバーのidobataIDを入力して「検索」ボタンを押下してください。</p>
+        <form method=" post" action="/confirm" th:object="${check}">
+            <div th:if="*{errorCheck}">
+                <p style="color: red;" th:text="検索条件にマッチする情報がありませんでした。"></p>
+            </div>
+        </form>
+        <div class="container">
+            <form method="post" action="/confirm" th:object="${asf4Member}">
+                <div class="form-group row-justify-center">
+                    <label for="idobataid">idobataID：</label>
+                    <div class="input-group" style="width: 300px;">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">@</div>
+                        </div>
+                        <input class="form-control" type="text" th:value="*{idobataId}" th:field="*{idobataId}" id="idobataid" />
+                        <div class="input-group-append">
+                            <input class="btn btn-primary btn-block" type="submit" value="検索" />
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <input class="btn btn-success" type="submit" formaction="/asf4members" value="戻る" />
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
