@@ -7,18 +7,6 @@
     <link rel="shortcut icon" href="favicon.ico">
     <title>変更内容の確認｜(・x・)</title>
 </head>
-<form method="post" action="/update" th:object="${asf4Member}">
-    <p>登録内容を確認し、変更したい場合は「変更」ボタンを押下してください。</p>
-    <p>登録情報を削除したい場合は、「削除」ボタンを押下してください。</p>
-    <p>検索しなおしたい時は戻るボタンを押してください。</p>
-    <p th:text="'name： ' + *{name}">ここに名前が表示されます</p>
-    <p th:text="'idobataID： ' + *{idobataId}">ここにidobataIDが表示されます</p>
-    <p th:text="'floor： ' + *{floor}">ここにフロア情報が表示されます</p>
-    <p th:text="'skip： ' + *{skip}">ここにskip内容が表示されます</p>
-    <input type="submit" value="変更"/>
-    <input type="submit" value="削除" formaction="/delete_confirm"/>
-    <input type="submit" value="戻る" formaction="/asf4members"/>
-</form>
 <body>
     <h1 class="jumbotron">編集対象の確認</h1>
     <div class="container">
