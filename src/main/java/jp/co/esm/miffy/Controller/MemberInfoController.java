@@ -1,5 +1,6 @@
 package jp.co.esm.miffy.Controller;
 
+import jp.co.esm.miffy.component.HookComponent;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.form.Check;
 import jp.co.esm.miffy.service.Asf4MemberService;
@@ -21,9 +22,11 @@ import java.util.Optional;
 @Getter
 @Controller
 @RequiredArgsConstructor
-@SessionAttributes(types = {Asf4Member.class, Check.class, BindingResult.class})
+@SessionAttributes(types = {Asf4Member.class, Check.class, BindingResult.class, HookComponent.class})
 public class MemberInfoController {
+    private final jp.co.esm.miffy.service.HookService hookService;
     private final Asf4MemberService asf4MemberService;
+    private final HookComponent hookComponent;
 
     /**
      * entityオブジェクトを初期化して返却する
@@ -53,6 +56,12 @@ public class MemberInfoController {
         model.addAttribute("asf4MemberList", asf4MemberList);
         // asf4MemberService.hook();    // デバッグ用のhookメソッドの呼び出し
         return "asf4members";
+    }
+
+    @RequestMapping("/skip")
+    public String index(Model model) {
+        hookComponent.postToHook();
+        return "redirect:/asf4members";
     }
 
     /**
