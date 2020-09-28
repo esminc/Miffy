@@ -33,7 +33,7 @@ public class MemberInfoController {
      *
      * @return entityオブジェクト
      */
-    @ModelAttribute("asf4Member")
+    @ModelAttribute("/asf4Member")
     public Asf4Member createAsf4Member() {
         Asf4Member asf4Member = new Asf4Member();
         return asf4Member;
@@ -48,7 +48,7 @@ public class MemberInfoController {
      * @param asf4Member
      * @return
      */
-    @RequestMapping("asf4members")
+    @RequestMapping("/asf4members")
     public String index(Model model, Asf4Member asf4Member, Check check) {
         asf4Member.setId(null);
         check.setIdobataIdCheck(false);
@@ -136,7 +136,6 @@ public class MemberInfoController {
      */
     @RequestMapping("/create")
     public String create(Asf4Member asf4Member, Check check) {
-        check.setIdobataIdCheck(false);
         asf4Member.setId(null);
         asf4Member.setName("");
         asf4Member.setIdobataId("");
