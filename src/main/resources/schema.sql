@@ -6,6 +6,7 @@ CREATE TABLE members (
   idobata_id VARCHAR(20) NOT NULL,
   floor VARCHAR(20) DEFAULT 4,
   skip BOOLEAN DEFAULT FALSE,
+  note VARCHAR(255),
   is_cleaner BOOLEAN DEFAULT FALSE
 );
 
