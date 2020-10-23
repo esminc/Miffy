@@ -17,6 +17,7 @@
                     <th>氏名</th>
                     <th>idobataID</th>
                     <th>掃除当番skip</th>
+                    <th>備考</th>
                 </tr>
             </thead>
             <tr th:each="list : ${asf4MemberList}" th:object="${list}">
@@ -24,6 +25,7 @@
                 <td th:text="*{name}"></td>
                 <td th:text="'@' + *{idobataId}"></td>
                 <td th:text="*{skip}"></td>
+                <td th:text="*{note}"></td>
         </table>
         <div class="form-check">
             <form method="post" action="/search" th:object="${asf4Member}">

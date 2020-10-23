@@ -37,6 +37,9 @@ public class Asf4Member {
   @Column(name = "skip")
   private boolean skip;
 
+  @Column(name = "note")
+  private String note;
+
   @Column(name = "is_cleaner")
   private boolean isCleaner;
 
