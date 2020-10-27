@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Setter
 @Getter
@@ -97,6 +96,7 @@ public class MemberInfoController {
             asf4Member.setIdobataId(asf4MemberOptional.getIdobataId());
             asf4Member.setFloor(asf4MemberOptional.getFloor());
             asf4Member.setSkip(asf4MemberOptional.isSkip());
+            asf4Member.setNote(asf4MemberOptional.getNote());
             return "confirm";
         } catch (NoSuchElementException e) {
             check.setErrorCheck(true);
@@ -141,6 +141,7 @@ public class MemberInfoController {
         asf4Member.setIdobataId("");
         asf4Member.setFloor("");
         asf4Member.setSkip(false);
+        asf4Member.setNote("");
         return "update";
     }
 
