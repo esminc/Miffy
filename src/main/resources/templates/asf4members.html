@@ -5,16 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="shortcut icon" href="favicon.ico">
-    <title>ASF Co-Class Members｜(・x・)</title>
+    <title>(・x・) | ASF Co-Class Cleaners</title>
 </head>
 <body>
-    <h1 class="jumbotron">ASF Co-Class Members</h1>
+    <div class="jumbotron">
+        <h1 class="display-4">4階北の給湯室掃除当番</h1>
+        <p class="lead">福井本社4階北フロア(ASF Co-Class)の給湯室を掃除している有志の皆さん向けのページ</p>
+        <hr class="my-4">
+        <p>給湯室掃除にご協力いただける方は新規登録ボタンからどうぞ</p>
+        <div class="form-check">
+            <form method="post" action="/search" th:object="${asf4Member}">
+                <input class="btn btn-success" type="submit" formaction="/create" value="新規登録" />
+            </form>
+        </div>
+    </div>
     <div class="container">
         <div class="form-check" style="padding-bottom: 8px;">
             <form method="post" action="/search" th:object="${asf4Member}">
                 <input class="btn btn-danger" type="submit" formaction="/skip" value="今日は掃除当番できない"/>
                 <input class="btn btn-primary" type="submit" value="メンバー情報変更" />
-                <input class="btn btn-success" type="submit" formaction="/create" value="新規登録" />
             </form>
         </div>
         <table class="table table-hover table-bordered table-striped">
