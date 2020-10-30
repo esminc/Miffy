@@ -31,7 +31,7 @@ public class HookService {
      * @return 前回の掃除当番をAsf4Memberクラスで返す。
      */
     private Asf4Member getLastCleaner() {
-        Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByIsCleanerTrue();
+        Optional<Asf4Member> lastCleanerOptional = asf4MemberRepository.findByCleanerTrue();
         return lastCleanerOptional.orElseThrow(() -> new NoSuchElementException("IsCleaner == true に一致する情報がありません。"));
     }
 

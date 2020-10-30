@@ -34,6 +34,7 @@
                     <th>idobataID</th>
                     <th>掃除当番skip</th>
                     <th>備考</th>
+                    <th>今日の掃除当番</th>
                 </tr>
             </thead>
             <tr th:each="list : ${asf4MemberList}" th:object="${list}">
@@ -42,6 +43,7 @@
                 <td th:text="'@' + *{idobataId}"></td>
                 <td th:text="*{skip}"></td>
                 <td th:text="*{note}"></td>
+                <td th:text="*{cleaner}"></td>
         </table>
     </div>
 </body>
