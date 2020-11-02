@@ -43,9 +43,9 @@ public class HookService {
     private Asf4Member getCleaner() throws NoSuchElementException {
         Asf4Member lastCleaner = getLastCleaner();
         int cleanerId = lastCleaner.getId();
-        Optional<Asf4Member> cleanerOptional = asf4MemberRepository.findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc("4", cleanerId);
+        Optional<Asf4Member> cleanerOptional = asf4MemberRepository.findTopBySkipFalseAndIdGreaterThanOrderByIdAsc(cleanerId);
         if (cleanerOptional.isEmpty()) {
-            cleanerOptional = asf4MemberRepository.findTopByFloorAndSkipFalseOrderByIdAsc("4");
+            cleanerOptional = asf4MemberRepository.findTopBySkipFalseOrderByIdAsc();
         }
         Asf4Member cleaner;
         if (cleanerOptional.isPresent()) {

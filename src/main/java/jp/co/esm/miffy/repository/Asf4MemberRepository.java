@@ -17,8 +17,6 @@ public interface Asf4MemberRepository extends JpaRepository<Asf4Member, Integer>
      */
     List<Asf4Member> findAllByOrderByIdAsc();
 
-    Optional<Asf4Member> findByIdAndSkipFalse(int cleanerTodayId);
-
     Optional<Asf4Member> findByIdobataId(String idobataId);
 
     /**
@@ -28,7 +26,7 @@ public interface Asf4MemberRepository extends JpaRepository<Asf4Member, Integer>
      * @param id int型のid
      * @return 条件に一致するメンバー情報をOptional型で返す
      */
-    Optional<Asf4Member> findTopByFloorAndSkipFalseAndIdGreaterThanOrderByIdAsc(String floor, int id);
+    Optional<Asf4Member> findTopBySkipFalseAndIdGreaterThanOrderByIdAsc(int id);
 
     /**
      * 指定のフロアに一致かつ、Skip==falseのメンバー情報をid昇順に並べた一番上のメンバー情報を取得する
@@ -36,7 +34,7 @@ public interface Asf4MemberRepository extends JpaRepository<Asf4Member, Integer>
      * @param floor Stringのフロア情報
      * @return 条件に一致するメンバー情報をOptional型で返す
      */
-    Optional<Asf4Member> findTopByFloorAndSkipFalseOrderByIdAsc(String floor);
+    Optional<Asf4Member> findTopBySkipFalseOrderByIdAsc();
 
     /**
      * IsCleaner==trueのメンバー情報を取得する
