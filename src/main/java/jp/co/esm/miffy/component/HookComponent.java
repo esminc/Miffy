@@ -40,9 +40,10 @@ public class HookComponent {
 
     /**
      * idobataのhookを使用して、今日の掃除当番をお知らせする。
-     * 月曜から金曜の午前10時に hookのURLへPOSTリクエストをする。
+     * 月曜から金曜の午前10時および午後5時半に hook の URL へ POST リクエストをする。
      */
     @Scheduled(cron = "0 0 10 * * 1-5", zone = "Asia/Tokyo")
+    @Scheduled(cron = "0 30 17 * * 1-5", zone = "Asia/Tokyo")
     public void postToHook() {
         String requestJson = hookService.makeRequest(now(ZoneId.of("Asia/Tokyo")));
         if (requestJson == null) {
