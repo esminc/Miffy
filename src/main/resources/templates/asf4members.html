@@ -37,7 +37,9 @@
                     <th>今日の掃除当番</th>
                 </tr>
             </thead>
-            <tr th:each="list : ${asf4MemberList}" th:object="${list}">
+            <tr th:each="list : ${asf4MemberList}"
+                th:object="${list}"
+                th:style="*{cleaner} == true ? 'background: pink' : 'background: white'">
                 <td th:text="*{id}"></td>
                 <td th:text="*{name}"></td>
                 <td th:text="'@' + *{idobataId}"></td>
