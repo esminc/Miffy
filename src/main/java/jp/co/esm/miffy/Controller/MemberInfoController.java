@@ -35,7 +35,6 @@ public class MemberInfoController {
     @ModelAttribute("/asf4Member")
     public Asf4Member createAsf4Member() {
         Asf4Member asf4Member = new Asf4Member();
-        System.out.println("メンバー情報" + asf4Member);
         return asf4Member;
     }
 
