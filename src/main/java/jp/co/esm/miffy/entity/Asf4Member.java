@@ -36,5 +36,5 @@ public class Asf4Member {
   private String note;
 
   @Column(name = "is_cleaner")
-  private boolean isCleaner;
+  private boolean cleaner;
 }

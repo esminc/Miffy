@@ -37,9 +37,9 @@ public interface Asf4MemberRepository extends JpaRepository<Asf4Member, Integer>
     Optional<Asf4Member> findTopBySkipFalseOrderByIdAsc();
 
     /**
-     * IsCleaner==trueのメンバー情報を取得する
+     * Cleaner==trueのメンバー情報を取得する
      *
      * @return 条件に一致するメンバー情報をOptional型で返す
      */
-    Optional<Asf4Member> findByIsCleanerTrue();
+    Optional<Asf4Member> findByCleanerTrue();
 }
