@@ -71,6 +71,47 @@ public class HookService {
     }
 
     /**
+     * 現在の掃除当番情報を取得する
+     *
+     * skip == false かつ cleaner == true に一致するのが今日の掃除当番
+     * 条件に一致するメンバーがいないときは NoSuchElementExceptionを投げる
+     * @return 今日の掃除当番をOptional型で返す
+     */
+    Asf4Member getCurrentCleaner() {
+        Optional<Asf4Member> currentCleanerOptional = asf4MemberRepository.findByCleanerTrueAndSkipFalse();
+        return currentCleanerOptional.orElseThrow(() -> new NoSuchElementException("cleaner == true かつ skip == false に一致する情報がありません。"));
+    }
+
+    /**
+     * あとでJSONにする通知メッセージ本文を作成する
+     *
+     * @return メンション用テキスト、本文、を結合して String で返す
+     */
+    String makeMainMessage() {
+        String postIdobataId = null;
+        String errorMessage = " ";
+        String mainMessage = null;
+        StringBuilder messageTotal = new StringBuilder();
+        Asf4Member cleaner;
+        try {
+            cleaner = getCurrentCleaner();
+            if (cleaner != null) {
+                postIdobataId = cleaner.getIdobataId();
+                mainMessage = "今日の掃除当番です";
+            }
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            postIdobataId = "here ";
+            errorMessage = e.getMessage();  // 9:00am時点でcleaner==trueがいないまたは全員がskip==trueのとき
+            mainMessage = "今日はみんなお掃除できないみたい(・x・)";
+        }
+        messageTotal.append(postIdobataId);
+        messageTotal.append(errorMessage);
+        messageTotal.append(mainMessage);
+        return messageTotal.toString();
+    }
+
+    /**
      * 曜日・日付に応じたメンション付きの掃除当番通知用リクエスト文を生成する。
      * 該当するメンバーが誰もいない場合は本文にその旨を記載する。
      *
@@ -80,35 +121,32 @@ public class HookService {
         if (isHoliday(date)) {
             return null;
         }
-        String postIdobataId = null;
-        String errorMessage = " ";
-        String mainMessage = null;
-        Asf4Member cleaner;
-        try {
-            cleaner = getCleaner();
-            if (cleaner != null) {
-                postIdobataId = cleaner.getIdobataId();
-                mainMessage = "今日の掃除当番です";
-            } else {
-                postIdobataId = "here";
-                mainMessage = "今日は誰もオフィスにいないみたい(・x・)";
-            }
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
-            postIdobataId = "all ";
-            errorMessage = e.getMessage();
-            mainMessage = "前回掃除した人は誰？(・x・)";
-        }
+        String mainMessage = makeMainMessage();
+//        Asf4Member cleaner;
+//        try {
+//            cleaner = getCleaner();
+//            if (cleaner != null) {
+//                postIdobataId = cleaner.getIdobataId();
+//                mainMessage = "今日の掃除当番です";
+//            } else {
+//                postIdobataId = "here";
+//                mainMessage = "今日は誰もオフィスにいないみたい(・x・)";
+//            }
+//        } catch (NoSuchElementException e) {
+//            e.printStackTrace();
+//            postIdobataId = "all ";
+//            errorMessage = e.getMessage();
+//            mainMessage = "前回掃除した人は誰？(・x・)";
+//        }
         StringBuilder request = new StringBuilder();
         request.append("{");
         request.append("\"source\":\"");
         request.append("@");
-        request.append(postIdobataId);
-        request.append(errorMessage);
         request.append(mainMessage);
         request.append("\"");
         request.append("}");
-        String requestJson = request.toString();
-        return requestJson;
+        return request.toString();
     }
 }
+
+
