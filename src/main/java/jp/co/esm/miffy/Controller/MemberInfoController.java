@@ -59,6 +59,7 @@ public class MemberInfoController {
 
     @RequestMapping("/skip")
     public String index(Model model) {
+        hookService.setNextCleaner();
         hookComponent.postToHook();
         return "redirect:/asf4members";
     }

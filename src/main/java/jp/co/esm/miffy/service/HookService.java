@@ -5,6 +5,7 @@ import ajd4jp.Holiday;
 import jp.co.esm.miffy.entity.Asf4Member;
 import jp.co.esm.miffy.repository.Asf4MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HookService {
     public final Asf4MemberRepository asf4MemberRepository;
+//    private final HookComponent hookComponent;
+
+    private String notificationCleanerIsUnknown;    // 前回の掃除当番が行方不明の場合のエラーメッセージ（毎回リセット）
 
     /**
      * テーブルのデータ一覧を返す。
@@ -36,28 +40,40 @@ public class HookService {
     }
 
     /**
-     * 今日の掃除当番の人を特定する。
-     *
-     * @return 掃除当番をOptionalオブジェクトで返す。
+     * 今日の掃除当番に交代する。
      */
-    private Asf4Member getCleaner() throws NoSuchElementException {
+    @Scheduled(cron = "0 0 9 * * 1-5", zone = "Asia/Tokyo")
+    public void setNextCleaner() throws NoSuchElementException {
         Asf4Member lastCleaner = getLastCleaner();
-        int cleanerId = lastCleaner.getId();
-        Optional<Asf4Member> cleanerOptional = asf4MemberRepository.findTopBySkipFalseAndIdGreaterThanOrderByIdAsc(cleanerId);
-        if (cleanerOptional.isEmpty()) {
-            cleanerOptional = asf4MemberRepository.findTopBySkipFalseOrderByIdAsc();
-        }
         Asf4Member cleaner;
-        if (cleanerOptional.isPresent()) {
-            cleaner = cleanerOptional.get();
-            cleaner.setCleaner(true);
-            asf4MemberRepository.saveAndFlush(cleaner);
-            lastCleaner.setCleaner(false);
-            asf4MemberRepository.saveAndFlush(lastCleaner);
-        } else {
-            cleaner = null;
+        try {
+            int cleanerId = lastCleaner.getId();
+            Optional<Asf4Member> cleanerOptional = asf4MemberRepository.findTopBySkipFalseAndIdGreaterThanOrderByIdAsc(cleanerId);
+            if (cleanerOptional.isEmpty()) {
+                cleanerOptional = asf4MemberRepository.findTopBySkipFalseOrderByIdAsc();
+            }
+            if (cleanerOptional.isPresent()) {
+                cleaner = cleanerOptional.get();
+                cleaner.setCleaner(true);
+                asf4MemberRepository.saveAndFlush(cleaner);
+                lastCleaner.setCleaner(false);
+                asf4MemberRepository.saveAndFlush(lastCleaner);
+            }
+        } catch(NoSuchElementException e) {
+            notificationCleanerIsUnknown = makeErrorMessage(e);
+//            hookComponent.postToHook(); // ここで通知したい
+            System.out.println(notificationCleanerIsUnknown); // 通知の代わりの出力
+            notificationCleanerIsUnknown = null;
         }
-        return cleaner;
+    }
+
+    String makeErrorMessage(NoSuchElementException e) {
+        e.printStackTrace();
+        StringBuilder errorMessage = new StringBuilder();
+        errorMessage.append("all ");
+        errorMessage.append(e.getMessage());
+        errorMessage.append("前回掃除した人は誰？(・x・)");
+        return errorMessage.toString();
     }
 
     /**
@@ -121,28 +137,15 @@ public class HookService {
         if (isHoliday(date)) {
             return null;
         }
-        String mainMessage = makeMainMessage();
-//        Asf4Member cleaner;
-//        try {
-//            cleaner = getCleaner();
-//            if (cleaner != null) {
-//                postIdobataId = cleaner.getIdobataId();
-//                mainMessage = "今日の掃除当番です";
-//            } else {
-//                postIdobataId = "here";
-//                mainMessage = "今日は誰もオフィスにいないみたい(・x・)";
-//            }
-//        } catch (NoSuchElementException e) {
-//            e.printStackTrace();
-//            postIdobataId = "all ";
-//            errorMessage = e.getMessage();
-//            mainMessage = "前回掃除した人は誰？(・x・)";
-//        }
         StringBuilder request = new StringBuilder();
         request.append("{");
         request.append("\"source\":\"");
         request.append("@");
-        request.append(mainMessage);
+        if (notificationCleanerIsUnknown == null) {
+            request.append(makeMainMessage());
+        } else {
+            request.append(notificationCleanerIsUnknown);
+        }
         request.append("\"");
         request.append("}");
         return request.toString();

@@ -1,6 +1,5 @@
 package jp.co.esm.miffy.Controller;
 
-import jp.co.esm.miffy.component.HookComponent;
 import jp.co.esm.miffy.entity.Asf4Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,9 +10,9 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class Asf4MemberController {
+public class HookController {
     private final jp.co.esm.miffy.service.HookService hookService;
-    private final HookComponent hookComponent;
+    //private final HookComponent hookComponent;
 
     @GetMapping("asf4members")
     public String index(Model model) {
