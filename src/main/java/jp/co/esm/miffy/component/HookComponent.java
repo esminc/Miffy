@@ -34,8 +34,8 @@ public class HookComponent {
     /**
      * hookのURL
      */
-    // private static final  String URL = "https://idobata.io/hook/custom/d1ac0e73-4477-4369-a375-59af37c78b4d"; // 本番用
-     private static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用;
+    private static final  String URL = "https://idobata.io/hook/custom/d1ac0e73-4477-4369-a375-59af37c78b4d"; // 本番用
+    // private static final String URL = "https://idobata.io/hook/custom/36145675-8b2f-4b78-bf2b-9e06577e0434";//PR用;
     // private static final String URL = "https://idobata.io/hook/custom/40fcef76-a6b7-4031-8088-50788d308b01";//debug用;
 
     /**
